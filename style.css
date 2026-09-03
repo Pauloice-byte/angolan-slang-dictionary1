@@ -1200,3 +1200,106 @@ input:focus-visible {
     }
 
    }
+/* =========================================
+   DAILY WORD SLIDER
+========================================= */
+
+.daily-slider {
+
+    width: 100%;
+
+    overflow-x: auto;
+
+    overflow-y: hidden;
+
+    scroll-snap-type: x mandatory;
+
+    scrollbar-width: none;
+
+    -webkit-overflow-scrolling: touch;
+
+}
+
+
+.daily-slider::-webkit-scrollbar {
+
+    display: none;
+
+}
+
+
+.daily-slider-track {
+
+    display: flex;
+
+    gap: 16px;
+
+}
+
+
+.daily-slide {
+
+    min-width: 100%;
+
+    scroll-snap-align: center;
+
+}
+
+
+.daily-slide .daily-card {
+
+    width: 100%;
+
+    min-height: 260px;
+
+}
+
+
+/* =========================================
+   SLIDER DOTS
+========================================= */
+
+.slider-dots {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-top: 18px;
+
+}
+
+
+.slider-dot {
+
+    width: 8px;
+
+    height: 8px;
+
+    padding: 0;
+
+    background: var(--border);
+
+    border-radius: 50%;
+
+    transition:
+
+        width 0.25s ease,
+        background 0.25s ease;
+
+}
+
+
+.slider-dot.active {
+
+    width: 26px;
+
+    background: var(--red);
+
+    border-radius: 999px;
+
+}
