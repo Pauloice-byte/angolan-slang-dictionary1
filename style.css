@@ -157,10 +157,6 @@ input:focus-visible {
 
 /* =========================================
    SAMAKAKA-INSPIRED PATTERN
-
-   Geometric decorative pattern.
-   We will later replace or enhance this
-   with a dedicated original SVG pattern.
 ========================================= */
 
 .pattern {
@@ -370,15 +366,18 @@ input:focus-visible {
 
     background: var(--surface);
 
-    /* GOLDEN FRAME */
+    /* SHINY GOLD FRAME */
 
     border:
-        2px solid
+        3px solid
         var(--gold);
 
     border-radius: var(--radius-xl);
 
-    box-shadow: var(--shadow-md);
+    box-shadow:
+        var(--shadow-md),
+        0 0 0 1px rgba(255, 220, 120, 0.65),
+        0 0 14px rgba(216, 155, 43, 0.18);
 
 }
 
@@ -688,15 +687,18 @@ input:focus-visible {
 
     background: var(--surface);
 
-    /* GOLDEN FRAME */
+    /* SHINY GOLD FRAME */
 
     border:
-        2px solid
+        3px solid
         var(--gold);
 
     border-radius: var(--radius-lg);
 
-    box-shadow: var(--shadow-sm);
+    box-shadow:
+        var(--shadow-sm),
+        0 0 0 1px rgba(255, 220, 120, 0.55),
+        0 0 12px rgba(216, 155, 43, 0.16);
 
     transition:
         transform 0.25s ease,
@@ -707,8 +709,8 @@ input:focus-visible {
 
 .daily-card:nth-child(1) {
 
-    border-top:
-        2px solid
+    border:
+        3px solid
         var(--gold);
 
 }
@@ -721,7 +723,7 @@ input:focus-visible {
     color: white;
 
     border:
-        2px solid
+        3px solid
         var(--gold);
 
 }
@@ -729,8 +731,8 @@ input:focus-visible {
 
 .daily-card:nth-child(3) {
 
-    border-top:
-        2px solid
+    border:
+        3px solid
         var(--gold);
 
 }
@@ -741,8 +743,9 @@ input:focus-visible {
     transform: translateY(-5px);
 
     box-shadow:
-        0 8px 24px
-        rgba(216, 155, 43, 0.18);
+        var(--shadow-md),
+        0 0 0 1px rgba(255, 225, 130, 0.8),
+        0 0 20px rgba(216, 155, 43, 0.28);
 
 }
 
