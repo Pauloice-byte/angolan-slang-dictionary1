@@ -362,51 +362,71 @@ function renderHome() {
                 </div>
 
 
-                <div class="daily-grid">
+                <div class="daily-slider">
 
-                    ${dailyWords.map(
-                        (item, index) => `
+    <div class="daily-slider-track">
 
-                        <article
-                            class="daily-card"
-                        >
+        ${dailyWords.map(
+            (item, index) => `
 
-                            <span class="daily-number">
+            <article class="daily-slide">
 
-                                0${index + 1}
+                <div class="daily-card">
 
-                            </span>
+                    <span class="daily-number">
 
+                        ${String(index + 1).padStart(2, "0")} / 03
 
-                            <h3>
+                    </span>
 
-                                ${item.word}
+                    <h3>
 
-                            </h3>
+                        ${item.word}
 
+                    </h3>
 
-                            <p>
+                    <p>
 
-                                Discover today's word.
+                        Discover today's word.
 
-                            </p>
+                    </p>
 
+                    <button
+                        type="button"
+                        onclick="openDemoWord(${item.id})"
+                    >
 
-                            <button
-                                type="button"
-                                onclick="openDemoWord(${item.id})"
-                            >
+                        Discover →
 
-                                Discover →
-
-                            </button>
-
-                        </article>
-
-                    `
-                    ).join("")}
+                    </button>
 
                 </div>
+
+            </article>
+
+        `
+        ).join("")}
+
+    </div>
+
+</div>
+
+
+<div class="slider-dots">
+
+    ${dailyWords.map(
+        (_, index) => `
+
+        <button
+            class="slider-dot ${index === 0 ? "active" : ""}"
+            type="button"
+            aria-label="Go to word ${index + 1}"
+        ></button>
+
+    `
+    ).join("")}
+
+</div>
 
             </section>
 
