@@ -1,1 +1,373 @@
+/* =========================================
+   ANGOLAN SLANG DICTIONARY
+   GLOBAL STYLES
+========================================= */
 
+:root {
+
+    /* Brand */
+    --primary: #e85d04;
+    --primary-dark: #c94d00;
+    --primary-light: #fff0e8;
+
+    /* Background */
+    --background: #fffdf9;
+    --surface: #ffffff;
+    --surface-soft: #f7f3ee;
+
+    /* Text */
+    --text-primary: #1e1b18;
+    --text-secondary: #716b65;
+    --text-light: #a39c95;
+
+    /* Borders */
+    --border: #e8e1da;
+
+    /* Status */
+    --success: #2e9b61;
+    --error: #d94b4b;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px rgba(30, 27, 24, 0.06);
+    --shadow-md: 0 8px 24px rgba(30, 27, 24, 0.1);
+    --shadow-lg: 0 20px 50px rgba(30, 27, 24, 0.14);
+
+    /* Radius */
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
+
+    /* Layout */
+    --max-width: 1200px;
+}
+
+
+/* =========================================
+   RESET
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+html {
+    min-height: 100%;
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    background: var(--background);
+
+    color: var(--text-primary);
+
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    -webkit-font-smoothing: antialiased;
+}
+
+
+button,
+input {
+    font: inherit;
+}
+
+
+button {
+
+    border: none;
+
+    cursor: pointer;
+
+}
+
+
+a {
+
+    color: inherit;
+
+    text-decoration: none;
+
+}
+
+
+/* =========================================
+   APP
+========================================= */
+
+#app {
+
+    min-height: 100vh;
+
+    padding-bottom: 90px;
+
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.header {
+
+    width: 100%;
+
+    max-width: var(--max-width);
+
+    margin: 0 auto;
+
+    padding: 20px 24px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+}
+
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+}
+
+
+.brand-icon {
+
+    width: 42px;
+
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: var(--primary);
+
+    color: white;
+
+    border-radius: 14px;
+
+    font-size: 21px;
+
+    font-weight: 800;
+
+}
+
+
+.brand-text h1 {
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+    line-height: 1.1;
+
+}
+
+
+.brand-text span {
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+
+}
+
+
+.icon-button {
+
+    width: 42px;
+
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: var(--surface-soft);
+
+    border-radius: 50%;
+
+    color: var(--text-primary);
+
+    font-size: 21px;
+
+}
+
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+#main-content {
+
+    width: 100%;
+
+    max-width: var(--max-width);
+
+    margin: 0 auto;
+
+    padding: 20px 24px;
+
+}
+
+
+/* =========================================
+   BOTTOM NAVIGATION
+========================================= */
+
+.bottom-navigation {
+
+    position: fixed;
+
+    bottom: 0;
+
+    left: 0;
+
+    right: 0;
+
+    height: 76px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 8px 16px;
+
+    background: rgba(255, 255, 255, 0.96);
+
+    backdrop-filter: blur(16px);
+
+    border-top: 1px solid var(--border);
+
+    z-index: 100;
+
+}
+
+
+.nav-item {
+
+    min-width: 70px;
+
+    height: 58px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 4px;
+
+    background: transparent;
+
+    color: var(--text-secondary);
+
+    border-radius: 14px;
+
+    font-size: 11px;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+
+}
+
+
+.nav-item:hover {
+
+    background: var(--surface-soft);
+
+}
+
+
+.nav-item.active {
+
+    color: var(--primary);
+
+    font-weight: 700;
+
+}
+
+
+.nav-icon {
+
+    font-size: 20px;
+
+    line-height: 1;
+
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 700px) {
+
+    .header,
+    #main-content {
+
+        padding-left: 18px;
+
+        padding-right: 18px;
+
+    }
+
+}
+
+
+@media (min-width: 701px) {
+
+    .bottom-navigation {
+
+        left: 50%;
+
+        right: auto;
+
+        transform: translateX(-50%);
+
+        bottom: 20px;
+
+        width: auto;
+
+        height: 66px;
+
+        border: 1px solid var(--border);
+
+        border-radius: 22px;
+
+        box-shadow: var(--shadow-md);
+
+    }
+
+                    }
