@@ -196,7 +196,6 @@ input:focus-visible {
 }
 
 
-
 /* =========================================
    HEADER
 ========================================= */
@@ -371,9 +370,11 @@ input:focus-visible {
 
     background: var(--surface);
 
+    /* GOLDEN FRAME */
+
     border:
-        1px solid
-        rgba(222, 212, 198, 0.8);
+        2px solid
+        var(--gold);
 
     border-radius: var(--radius-xl);
 
@@ -687,7 +688,11 @@ input:focus-visible {
 
     background: var(--surface);
 
-    border: 1px solid var(--border);
+    /* GOLDEN FRAME */
+
+    border:
+        2px solid
+        var(--gold);
 
     border-radius: var(--radius-lg);
 
@@ -703,8 +708,8 @@ input:focus-visible {
 .daily-card:nth-child(1) {
 
     border-top:
-        6px solid
-        var(--red);
+        2px solid
+        var(--gold);
 
 }
 
@@ -715,7 +720,9 @@ input:focus-visible {
 
     color: white;
 
-    border-color: var(--blue);
+    border:
+        2px solid
+        var(--gold);
 
 }
 
@@ -723,8 +730,8 @@ input:focus-visible {
 .daily-card:nth-child(3) {
 
     border-top:
-        6px solid
-        var(--green);
+        2px solid
+        var(--gold);
 
 }
 
@@ -733,7 +740,9 @@ input:focus-visible {
 
     transform: translateY(-5px);
 
-    box-shadow: var(--shadow-md);
+    box-shadow:
+        0 8px 24px
+        rgba(216, 155, 43, 0.18);
 
 }
 
@@ -1199,7 +1208,9 @@ input:focus-visible {
 
     }
 
-   }
+}
+
+
 /* =========================================
    DAILY WORD SLIDER
 ========================================= */
@@ -1303,6 +1314,8 @@ input:focus-visible {
     border-radius: 999px;
 
 }
+
+
 /* =========================================
    WORD DETAIL
 ========================================= */
@@ -1525,21 +1538,4 @@ input:focus-visible {
     width: 100%;
 
     justify-content: center;
-}
-/* =========================================
-   PREMIUM GOLDEN FRAMES
-========================================= */
-
-.hero {
-    border: 1.5px solid rgba(201, 162, 39, 0.85);
-    border-radius: 22px;
-}
-
-.daily-card {
-    border: 1.5px solid rgba(201, 162, 39, 0.75);
-}
-
-.daily-card:hover {
-    border-color: #C9A227;
-    box-shadow: 0 8px 24px rgba(201, 162, 39, 0.12);
-}
+   }
