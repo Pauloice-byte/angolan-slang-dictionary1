@@ -904,5 +904,52 @@ document
 /* =========================================
    INITIALIZE APPLICATION
 ========================================= */
+document.addEventListener(
+    "scroll",
+    () => {
 
+        const slider =
+            document.querySelector(
+                ".daily-slider"
+            );
+
+
+        if (!slider) {
+
+            return;
+
+        }
+
+
+        const slideWidth =
+            slider.clientWidth;
+
+
+        const currentIndex =
+            Math.round(
+                slider.scrollLeft /
+                slideWidth
+            );
+
+
+        const dots =
+            document.querySelectorAll(
+                ".slider-dot"
+            );
+
+
+        dots.forEach(
+            (dot, index) => {
+
+                dot.classList.toggle(
+                    "active",
+                    index === currentIndex
+                );
+
+            }
+        );
+
+    },
+    true
+);
 renderPage();
