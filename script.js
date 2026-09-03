@@ -45,100 +45,26 @@ const demoWords = [
 
     {
         id: 1,
-
         word: "Kota",
-
-        pronunciation: "/ˈkɔ.ta/",
-
-        partOfSpeech: "noun",
-
-        meaning:
-            "A popular Angolan sandwich made with bread and a variety of fillings.",
-
-        english:
-            "A traditional Angolan sandwich.",
-
-        portuguese:
-            "Sanduíche tradicional angolana.",
-
-        example:
-            "Vou comprar um kota antes de ir para casa.",
-
-        exampleTranslation:
-            "I'm going to buy a kota before going home.",
-
-        alternatives: [],
-
-        audio: null,
-
-        image: null
-
+        meaning: "Temporary demonstration meaning.",
+        example: "Temporary example.",
+        alternatives: []
     },
-
 
     {
         id: 2,
-
         word: "Bazar",
-
-        pronunciation: "/baˈzar/",
-
-        partOfSpeech: "verb",
-
-        meaning:
-            "To leave, go away or depart.",
-
-        english:
-            "To leave; to go away.",
-
-        portuguese:
-            "Ir embora; sair.",
-
-        example:
-            "Já está tarde, vamos bazar.",
-
-        exampleTranslation:
-            "It's already late, let's leave.",
-
-        alternatives: [],
-
-        audio: null,
-
-        image: null
-
+        meaning: "Temporary demonstration meaning.",
+        example: "Temporary example.",
+        alternatives: []
     },
-
 
     {
         id: 3,
-
         word: "Mambo",
-
-        pronunciation: "/ˈmã.bo/",
-
-        partOfSpeech: "noun",
-
-        meaning:
-            "A thing, matter, situation or subject being discussed.",
-
-        english:
-            "Thing; matter; situation.",
-
-        portuguese:
-            "Coisa; assunto; situação.",
-
-        example:
-            "Qual é o mambo?",
-
-        exampleTranslation:
-            "What's the matter?",
-
-        alternatives: [],
-
-        audio: null,
-
-        image: null
-
+        meaning: "Temporary demonstration meaning.",
+        example: "Temporary example.",
+        alternatives: []
     }
 
 ];
@@ -170,19 +96,13 @@ function navigateTo(page) {
     appState.previousPage =
         appState.currentPage;
 
-
-    appState.currentPage =
-        page;
-
+    appState.currentPage = page;
 
     closeMenu();
 
-
     updateNavigation();
 
-
     renderPage();
-
 
     window.scrollTo({
 
@@ -436,9 +356,7 @@ function renderHome() {
                         type="button"
                         onclick="navigateTo('daily')"
                     >
-
                         View all →
-
                     </button>
 
                 </div>
@@ -446,89 +364,69 @@ function renderHome() {
 
                 <div class="daily-slider">
 
-                    <div class="daily-slider-track">
+    <div class="daily-slider-track">
 
-                        ${dailyWords.map(
-                            (item, index) => `
+        ${dailyWords.map(
+            (item, index) => `
 
-                            <article
-                                class="daily-slide"
-                            >
+            <article class="daily-slide">
 
-                                <div
-                                    class="daily-card"
-                                >
+                <div class="daily-card">
 
-                                    <span
-                                        class="daily-number"
-                                    >
+                    <span class="daily-number">
 
-                                        ${String(
-                                            index + 1
-                                        ).padStart(
-                                            2,
-                                            "0"
-                                        )} / 03
+                        ${String(index + 1).padStart(2, "0")} / 03
 
-                                    </span>
+                    </span>
 
+                    <h3>
 
-                                    <h3>
+                        ${item.word}
 
-                                        ${item.word}
+                    </h3>
 
-                                    </h3>
+                    <p>
 
+                        Discover today's word.
 
-                                    <p>
+                    </p>
 
-                                        Discover today's word.
+                    <button
+                        type="button"
+                        onclick="openDemoWord(${item.id})"
+                    >
 
-                                    </p>
+                        Discover →
 
-
-                                    <button
-                                        type="button"
-                                        onclick="openDemoWord(${item.id})"
-                                    >
-
-                                        Discover →
-
-                                    </button>
-
-                                </div>
-
-                            </article>
-
-                        `
-                        ).join("")}
-
-                    </div>
+                    </button>
 
                 </div>
 
+            </article>
 
-                <div class="slider-dots">
+        `
+        ).join("")}
 
-                    ${dailyWords.map(
-                        (_, index) => `
+    </div>
 
-                        <button
-                            class="slider-dot ${
-                                index === 0
-                                    ? "active"
-                                    : ""
-                            }"
-                            type="button"
-                            aria-label="Go to word ${
-                                index + 1
-                            }"
-                        ></button>
+</div>
 
-                    `
-                    ).join("")}
 
-                </div>
+<div class="slider-dots">
+
+    ${dailyWords.map(
+        (_, index) => `
+
+        <button
+            class="slider-dot ${index === 0 ? "active" : ""}"
+            type="button"
+            aria-label="Go to word ${index + 1}"
+        ></button>
+
+    `
+    ).join("")}
+
+</div>
 
             </section>
 
@@ -560,9 +458,7 @@ function renderDailyPage() {
                     letter-spacing: -2px;
                 "
             >
-
                 3 Words of the Day
-
             </h2>
 
 
@@ -576,20 +472,11 @@ function renderDailyPage() {
                 ${dailyWords.map(
                     (item, index) => `
 
-                    <article
-                        class="daily-card"
-                    >
+                    <article class="daily-card">
 
-                        <span
-                            class="daily-number"
-                        >
+                        <span class="daily-number">
 
-                            ${String(
-                                index + 1
-                            ).padStart(
-                                2,
-                                "0"
-                            )}
+                            0${index + 1}
 
                         </span>
 
@@ -632,7 +519,7 @@ function renderDailyPage() {
 
 
 /* =========================================
-   WORD DETAIL
+   TEMPORARY WORD PREVIEW
 ========================================= */
 
 function openDemoWord(id) {
@@ -660,17 +547,9 @@ function openDemoWord(id) {
         );
 
 
-    const isSaved =
-        appState.savedWords.includes(
-            word.id
-        );
-
-
     mainContent.innerHTML = `
 
-        <section
-            class="home-page word-detail-page"
-        >
+        <section class="home-page">
 
             <button
                 class="text-button"
@@ -685,230 +564,48 @@ function openDemoWord(id) {
             </button>
 
 
-            <div class="word-detail">
+            <div
+                class="hero"
+                style="
+                    margin-top: 25px;
+                "
+            >
 
-                <!-- =====================
-                     WORD HEADER
-                ====================== -->
+                <p class="eyebrow">
+                    WORD PREVIEW
+                </p>
+
+
+                <h2>
+
+                    ${word.word}
+
+                </h2>
+
+
+                <p
+                    class="hero-description"
+                >
+
+                    ${word.meaning}
+
+                </p>
+
 
                 <div
-                    class="word-detail-header"
+                    style="
+                        margin-top: 28px;
+                        padding: 22px;
+                        background: var(--surface-soft);
+                        border-radius: var(--radius-md);
+                        color: var(--text-secondary);
+                        line-height: 1.7;
+                    "
                 >
 
-                    <p class="eyebrow">
-                        WORD OF THE DAY
-                    </p>
-
-
-                    <div
-                        class="word-title-row"
-                    >
-
-                        <h1>
-                            ${word.word}
-                        </h1>
-
-
-                        <button
-                            class="word-audio-button"
-                            type="button"
-                            aria-label="Play pronunciation"
-                            ${
-                                word.audio
-                                    ? ""
-                                    : "disabled"
-                            }
-                        >
-
-                            🔊
-
-                        </button>
-
-                    </div>
-
-
-                    <div class="word-meta">
-
-                        <span>
-                            ${word.pronunciation}
-                        </span>
-
-
-                        <span>
-                            ${word.partOfSpeech}
-                        </span>
-
-                    </div>
+                    “${word.example}”
 
                 </div>
-
-
-                <!-- =====================
-                     MEANING
-                ====================== -->
-
-                <div
-                    class="word-detail-section"
-                >
-
-                    <p class="detail-label">
-                        MEANING
-                    </p>
-
-
-                    <p class="word-meaning">
-
-                        ${word.meaning}
-
-                    </p>
-
-                </div>
-
-
-                <!-- =====================
-                     ENGLISH
-                ====================== -->
-
-                <div
-                    class="word-detail-section"
-                >
-
-                    <p class="detail-label">
-                        IN ENGLISH
-                    </p>
-
-
-                    <p class="word-secondary">
-
-                        ${word.english}
-
-                    </p>
-
-                </div>
-
-
-                <!-- =====================
-                     PORTUGUESE
-                ====================== -->
-
-                <div
-                    class="word-detail-section"
-                >
-
-                    <p class="detail-label">
-                        EM PORTUGUÊS
-                    </p>
-
-
-                    <p class="word-secondary">
-
-                        ${word.portuguese}
-
-                    </p>
-
-                </div>
-
-
-                <!-- =====================
-                     EXAMPLE
-                ====================== -->
-
-                <div class="word-example">
-
-                    <p class="detail-label">
-                        EXAMPLE
-                    </p>
-
-
-                    <p class="example-original">
-
-                        “${word.example}”
-
-                    </p>
-
-
-                    <p
-                        class="example-translation"
-                    >
-
-                        ${word.exampleTranslation}
-
-                    </p>
-
-                </div>
-
-
-                <!-- =====================
-                     ALTERNATIVES
-                ====================== -->
-
-                ${
-                    word.alternatives.length
-                        ? `
-
-                            <div
-                                class="word-detail-section"
-                            >
-
-                                <p
-                                    class="detail-label"
-                                >
-
-                                    ALSO KNOWN AS
-
-                                </p>
-
-
-                                <div
-                                    class="word-alternatives"
-                                >
-
-                                    ${word.alternatives
-                                        .map(
-                                            (
-                                                alternative
-                                            ) =>
-                                                `<span>
-                                                    ${alternative}
-                                                </span>`
-                                        )
-                                        .join("")}
-
-                                </div>
-
-                            </div>
-
-                        `
-                        : ""
-                }
-
-
-                <!-- =====================
-                     SAVE
-                ====================== -->
-
-                <button
-                    class="primary-button word-save-button"
-                    type="button"
-                    onclick="toggleSavedWord(${word.id})"
-                >
-
-                    <span>
-                        ${
-                            isSaved
-                                ? "♥"
-                                : "♡"
-                        }
-                    </span>
-
-
-                    ${
-                        isSaved
-                            ? "Saved"
-                            : "Save this word"
-                    }
-
-                </button>
 
             </div>
 
@@ -924,43 +621,6 @@ function openDemoWord(id) {
         behavior: "smooth"
 
     });
-
-}
-
-
-/* =========================================
-   SAVE / UNSAVE WORD
-========================================= */
-
-function toggleSavedWord(id) {
-
-    const index =
-        appState.savedWords.indexOf(id);
-
-
-    if (index === -1) {
-
-        appState.savedWords.push(id);
-
-    } else {
-
-        appState.savedWords.splice(
-            index,
-            1
-        );
-
-    }
-
-
-    localStorage.setItem(
-        "angolanSlangSavedWords",
-        JSON.stringify(
-            appState.savedWords
-        )
-    );
-
-
-    openDemoWord(id);
 
 }
 
@@ -986,9 +646,7 @@ function renderUpdates() {
                     letter-spacing: -2px;
                 "
             >
-
                 Updates
-
             </h2>
 
 
@@ -1027,4 +685,271 @@ function renderUpdates() {
                     can be created directly from
                     the admin dashboard.
 
-             
+                </p>
+
+            </div>
+
+        </section>
+
+    `;
+
+}
+
+
+/* =========================================
+   ABOUT PAGE
+========================================= */
+
+function renderAbout() {
+
+    return `
+
+        <section class="home-page">
+
+            <p class="eyebrow">
+                THE PROJECT
+            </p>
+
+
+            <h2
+                style="
+                    font-size: clamp(42px, 7vw, 64px);
+                    letter-spacing: -2px;
+                "
+            >
+                About
+            </h2>
+
+
+            <div
+                class="hero"
+                style="
+                    margin-top: 30px;
+                "
+            >
+
+                <h3
+                    style="
+                        font-size: 30px;
+                    "
+                >
+
+                    Angolan Slang Dictionary
+
+                </h3>
+
+
+                <p class="hero-description">
+
+                    A digital dictionary designed
+                    to preserve, explore and share
+                    Angolan slang, expressions
+                    and everyday language.
+
+                </p>
+
+            </div>
+
+        </section>
+
+    `;
+
+}
+
+
+/* =========================================
+   GENERIC PLACEHOLDER PAGE
+========================================= */
+
+function renderComingSoon(
+    title,
+    description
+) {
+
+    return `
+
+        <section class="home-page">
+
+            <div class="hero">
+
+                <p class="eyebrow">
+                    UNDER DEVELOPMENT
+                </p>
+
+
+                <h2>
+
+                    ${title}
+
+                </h2>
+
+
+                <p class="hero-description">
+
+                    ${description}
+
+                </p>
+
+
+                <div
+                    style="
+                        margin-top: 30px;
+                        padding: 20px;
+                        background: var(--gold-light);
+                        border-radius: var(--radius-md);
+                        color: var(--text-primary);
+                    "
+                >
+
+                    We are building this section
+                    step by step.
+
+                </div>
+
+            </div>
+
+        </section>
+
+    `;
+
+}
+
+
+/* =========================================
+   MENU
+========================================= */
+
+const menuButton =
+    document.getElementById(
+        "menu-button"
+    );
+
+
+const closeMenuButton =
+    document.getElementById(
+        "close-menu"
+    );
+
+
+const sideMenu =
+    document.getElementById(
+        "side-menu"
+    );
+
+
+const menuOverlay =
+    document.getElementById(
+        "menu-overlay"
+    );
+
+
+function openMenu() {
+
+    sideMenu.classList.add("open");
+
+    menuOverlay.classList.add("open");
+
+}
+
+
+function closeMenu() {
+
+    sideMenu.classList.remove("open");
+
+    menuOverlay.classList.remove("open");
+
+}
+
+
+menuButton.addEventListener(
+    "click",
+    openMenu
+);
+
+
+closeMenuButton.addEventListener(
+    "click",
+    closeMenu
+);
+
+
+menuOverlay.addEventListener(
+    "click",
+    closeMenu
+);
+
+
+/* =========================================
+   BOTTOM NAVIGATION
+========================================= */
+
+document
+    .querySelectorAll(".nav-item")
+    .forEach((item) => {
+
+        item.addEventListener(
+            "click",
+            () => {
+
+                navigateTo(
+                    item.dataset.page
+                );
+
+            }
+        );
+
+    });
+
+
+/* =========================================
+   INITIALIZE APPLICATION
+========================================= */
+document.addEventListener(
+    "scroll",
+    () => {
+
+        const slider =
+            document.querySelector(
+                ".daily-slider"
+            );
+
+
+        if (!slider) {
+
+            return;
+
+        }
+
+
+        const slideWidth =
+            slider.clientWidth;
+
+
+        const currentIndex =
+            Math.round(
+                slider.scrollLeft /
+                slideWidth
+            );
+
+
+        const dots =
+            document.querySelectorAll(
+                ".slider-dot"
+            );
+
+
+        dots.forEach(
+            (dot, index) => {
+
+                dot.classList.toggle(
+                    "active",
+                    index === currentIndex
+                );
+
+            }
+        );
+
+    },
+    true
+);
+renderPage();
