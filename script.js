@@ -1,5 +1,21 @@
 /* ========================================= ANGOLAN SLANG DICTIONARY MAIN APPLICATION ========================================= */
 /* ========================================= APP STATE ========================================= */
+/* =========================================
+   SUPABASE CONFIGURATION
+========================================= */
+
+const SUPABASE_URL =
+    "https://kesrtifdzptnhpwmwlzu.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_DnY0DdakuwqW5WsE344j3A_49gpXc0y";
+
+
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
 const appState = {
 currentPage: "home",
 
