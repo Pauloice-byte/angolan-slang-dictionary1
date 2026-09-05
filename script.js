@@ -354,6 +354,17 @@ navItems.forEach((item) => {
 
 });
 }
+/* =========================================
+   GET APPLICATION WORDS
+========================================= */
+
+function getWords() {
+
+    return appState.words.length > 0
+        ? appState.words
+        : demoWords;
+
+}
 /* ========================================= PAGE ROUTER ========================================= */
 function renderPage() {
 const mainContent =
@@ -625,7 +636,7 @@ return `
 /* ========================================= DICTIONARY PAGE ========================================= */
 function renderDictionary() {
 const sortedWords =
-    [...demoWords].sort(
+    [...getWords()].sort(
         (a, b) =>
             a.word.localeCompare(
                 b.word
@@ -637,7 +648,7 @@ const categories =
     [
         "All",
         ...new Set(
-            demoWords.map(
+            getWords().map(
                 item => item.category
             )
         )
@@ -897,8 +908,8 @@ function updateResults() {
             .toLowerCase();
 
 
-    let filteredWords =
-        demoWords.filter(
+   let filteredWords =
+    getWords().filter(
             item => {
 
                 const matchesCategory =
