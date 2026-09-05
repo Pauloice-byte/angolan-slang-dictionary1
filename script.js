@@ -193,7 +193,114 @@ const demoWords = [
 
     isPremium: true
 }
-];
+   /* =========================================
+   LOAD WORDS FROM SUPABASE
+========================================= */
+
+async function loadWords() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("words")
+        .select(`
+            *,
+            categories (
+                name,
+                slug
+            ),
+            word_examples (
+                id,
+                example,
+                portuguese_translation,
+                english_translation
+            )
+        `)
+        .eq(
+            "is_published",
+            true
+        )
+        .order(
+            "word",
+            {
+                ascending: true
+            }
+        );
+
+
+    if (error) {
+
+        console.error(
+            "Error loading words:",
+            error
+        );
+
+        return;
+
+    }
+
+
+    appState.words =
+        data.map(
+            item => ({
+
+                id: item.id,
+
+                word: item.word,
+
+                slug: item.slug,
+
+                alternativeWord:
+                    item.alternative_word,
+
+                pronunciation:
+                    item.pronunciation,
+
+                meaning:
+                    item.definition,
+
+                portugueseTranslation:
+                    item.portuguese_translation,
+
+                englishTranslation:
+                    item.english_translation,
+
+                category:
+                    item.categories?.name ||
+                    "Uncategorized",
+
+                region:
+                    item.region,
+
+                origin:
+                    item.origin,
+
+                culturalExplanation:
+                    item.cultural_explanation,
+
+                image:
+                    item.image_url,
+
+                audio:
+                    item.audio_url,
+
+                examples:
+                    item.word_examples || [],
+
+                isPremium:
+                    item.is_premium
+
+            })
+        );
+
+
+    console.log(
+        "Words loaded from Supabase:",
+        appState.words
+    );
+
+}
 /* ========================================= DAILY WORDS ========================================= */
 const dailyWords = [
 demoWords[0],
@@ -1847,7 +1954,16 @@ originalRenderPage();
 setupCurrentPage();
 };
 /* ========================================= INITIALIZE APPLICATION ========================================= */
-renderPage();
+async function initializeApp() {
+
+    await loadWords();
+
+    renderPage();
+
+}
+
+
+initializeApp();
 Now add this at the very bottom of your existing style.css. Do not remove your current CSS.
 Writing
 /* ========================================= PHASE 2 — DICTIONARY ========================================= */
