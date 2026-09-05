@@ -17,15 +17,17 @@ const supabaseClient =
         SUPABASE_PUBLISHABLE_KEY
     );
 const appState = {
-currentPage: "home",
+    currentPage: "home",
 
-previousPage: "home",
+    previousPage: "home",
 
-savedWords: JSON.parse(
-    localStorage.getItem(
-        "angolanSlangSavedWords"
-    )
-) || [],
+    words: [],
+
+    savedWords: JSON.parse(
+        localStorage.getItem(
+            "angolanSlangSavedWords"
+        )
+    ) || [],
 };
 /* ========================================= DICTIONARY DATA
 TEMPORARY DATA STRUCTURE
