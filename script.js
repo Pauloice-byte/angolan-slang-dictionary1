@@ -1,143 +1,122 @@
 /* =========================================
    ANGOLAN SLANG DICTIONARY
-   APPLICATION FOUNDATION
+   MAIN APPLICATION
 ========================================= */
 
 
 /* =========================================
-   APPLICATION STATE
+   APP STATE
 ========================================= */
 
 const appState = {
 
-    currentRoute: "home",
+    currentPage: "home",
 
-    menuOpen: false,
+    previousPage: "home",
 
-    searchQuery: "",
-
-    initialized: false
+    savedWords: JSON.parse(
+        localStorage.getItem(
+            "angolanSlangSavedWords"
+        )
+    ) || [],
 
 };
 
 
 /* =========================================
-   DOM ELEMENTS
+   TEMPORARY DEMO DATA
+
+   IMPORTANT:
+   This is NOT the permanent dictionary.
+
+   These entries exist only so that we can
+   build and test the application interface.
+
+   Later:
+
+   Supabase
+       ↓
+   loadWords()
+       ↓
+   App
 ========================================= */
 
-const mainContent =
-    document.getElementById(
-        "main-content"
-    );
+const demoWords = [
 
-const menuButton =
-    document.getElementById(
-        "menu-button"
-    );
+    {
+        id: 1,
+        word: "Kota",
+        meaning: "Temporary demonstration meaning.",
+        example: "Temporary example.",
+        alternatives: []
+    },
 
-const closeMenuButton =
-    document.getElementById(
-        "close-menu"
-    );
+    {
+        id: 2,
+        word: "Bazar",
+        meaning: "Temporary demonstration meaning.",
+        example: "Temporary example.",
+        alternatives: []
+    },
 
-const menuOverlay =
-    document.getElementById(
-        "menu-overlay"
-    );
+    {
+        id: 3,
+        word: "Mambo",
+        meaning: "Temporary demonstration meaning.",
+        example: "Temporary example.",
+        alternatives: []
+    }
 
-const sideMenu =
-    document.getElementById(
-        "side-menu"
-    );
+];
 
 
 /* =========================================
-   ROUTES
+   DAILY WORDS
+
+   Temporary only.
 ========================================= */
 
-const routes = {
+const dailyWords = [
 
-    home: renderHome,
+    demoWords[0],
 
-    dictionary: renderDictionary,
+    demoWords[1],
 
-    search: renderSearch,
+    demoWords[2]
 
-    saved: renderSaved,
-
-    daily: renderDaily,
-
-    packs: renderPacks,
-
-    game: renderGame,
-
-    updates: renderUpdates,
-
-    about: renderAbout,
-
-    settings: renderSettings,
-
-    profile: renderProfile
-
-};
+];
 
 
 /* =========================================
    NAVIGATION
 ========================================= */
 
-function navigateTo(route) {
+function navigateTo(page) {
 
-    if (!routes[route]) {
+    appState.previousPage =
+        appState.currentPage;
 
-        route = "home";
-
-    }
-
-    appState.currentRoute = route;
+    appState.currentPage = page;
 
     closeMenu();
+
+    updateNavigation();
 
     renderPage();
 
     window.scrollTo({
+
         top: 0,
+
         behavior: "smooth"
+
     });
 
 }
 
 
-function renderPage() {
-
-    const renderer =
-        routes[
-            appState.currentRoute
-        ];
-
-    if (!renderer) {
-
-        appState.currentRoute = "home";
-
-        routes.home();
-
-        updateNavigation();
-
-        return;
-
-    }
-
-    renderer();
-
-    updateNavigation();
-
-    initializePageFeatures();
-
-}
-
-
 /* =========================================
-   NAVIGATION STATE
+   UPDATE NAVIGATION
 ========================================= */
 
 function updateNavigation() {
@@ -147,20 +126,124 @@ function updateNavigation() {
             ".nav-item"
         );
 
-    navItems.forEach(
-        (item) => {
 
-            const route =
-                item.dataset.route;
+    navItems.forEach((item) => {
 
-            item.classList.toggle(
-                "active",
-                route ===
-                appState.currentRoute
-            );
+        item.classList.remove("active");
+
+
+        if (
+            item.dataset.page ===
+            appState.currentPage
+        ) {
+
+            item.classList.add("active");
 
         }
-    );
+
+    });
+
+}
+
+
+/* =========================================
+   PAGE ROUTER
+========================================= */
+
+function renderPage() {
+
+    const mainContent =
+        document.getElementById(
+            "main-content"
+        );
+
+
+    switch (
+        appState.currentPage
+    ) {
+
+        case "home":
+
+            mainContent.innerHTML =
+                renderHome();
+
+            break;
+
+
+        case "dictionary":
+
+            mainContent.innerHTML =
+                renderComingSoon(
+                    "Dictionary",
+                    "The complete dictionary experience is being built."
+                );
+
+            break;
+
+
+        case "search":
+
+            mainContent.innerHTML =
+                renderComingSoon(
+                    "Search",
+                    "Search will allow users to find words, meanings and expressions."
+                );
+
+            break;
+
+
+        case "saved":
+
+            mainContent.innerHTML =
+                renderComingSoon(
+                    "Saved Words",
+                    "Your favourite words will appear here."
+                );
+
+            break;
+
+
+        case "daily":
+
+            mainContent.innerHTML =
+                renderDailyPage();
+
+            break;
+
+
+        case "updates":
+
+            mainContent.innerHTML =
+                renderUpdates();
+
+            break;
+
+
+        case "about":
+
+            mainContent.innerHTML =
+                renderAbout();
+
+            break;
+
+
+        case "settings":
+
+            mainContent.innerHTML =
+                renderComingSoon(
+                    "Settings",
+                    "Personalisation and application settings will appear here."
+                );
+
+            break;
+
+
+        default:
+
+            mainContent.innerHTML =
+                renderHome();
+
+    }
 
 }
 
@@ -171,383 +254,179 @@ function updateNavigation() {
 
 function renderHome() {
 
-    mainContent.innerHTML = `
+    return `
 
-        <section class="page home-page">
+        <section class="home-page">
 
-            <div class="hero">
+            <section class="hero">
 
                 <p class="eyebrow">
-                    ANGOLAN SLANG DICTIONARY
+                    ANGOLA IN WORDS
                 </p>
+
 
                 <h2>
-                    Discover the
-                    <span>language</span>
-                    of Angola.
+
+                    The words.
+
+                    <br>
+
+                    The culture.
+
+                    <br>
+
+                    <span>
+                        The meaning.
+                    </span>
+
                 </h2>
 
+
                 <p class="hero-description">
-                    Explore Angolan slang, expressions,
-                    meanings and natural examples —
-                    all in one place.
+
+                    Discover the expressions,
+                    slang and everyday language
+                    that bring Angolan culture
+                    to life.
+
                 </p>
+
 
                 <button
                     class="primary-button"
-                    data-route="dictionary"
                     type="button"
+                    onclick="navigateTo('dictionary')"
                 >
-                    Explore the dictionary
-                    <span>→</span>
+
+                    Explore Dictionary
+
+                    <span>
+                        →
+                    </span>
+
                 </button>
 
-            </div>
+            </section>
 
 
-            <div class="home-search">
+            <section class="home-search">
 
-                <div class="search-box">
+                <div
+                    class="search-box"
+                    onclick="navigateTo('search')"
+                >
 
-                    <span>⌕</span>
+                    <span>
+                        ⌕
+                    </span>
+
 
                     <input
-                        id="home-search-input"
-                        type="search"
-                        placeholder="Search a word or expression..."
-                        autocomplete="off"
+                        type="text"
+                        placeholder="Search for a word..."
+                        readonly
+                        aria-label="Search dictionary"
                     >
-
-                </div>
-
-            </div>
-
-
-            <section class="content-section daily-section">
-
-                <div class="section-heading">
-
-                    <h2>
-                        Today's 3
-                    </h2>
-
-                    <button
-                        class="text-button"
-                        data-route="daily"
-                        type="button"
-                    >
-                        See all →
-                    </button>
-
-                </div>
-
-
-                <div class="daily-grid">
-
-                    ${createDailyCard(
-                        1,
-                        "Mambo",
-                        "Thing, matter or situation."
-                    )}
-
-                    ${createDailyCard(
-                        2,
-                        "Kota",
-                        "An older or respected person."
-                    )}
-
-                    ${createDailyCard(
-                        3,
-                        "Maka",
-                        "A problem, issue or trouble."
-                    )}
 
                 </div>
 
             </section>
 
 
-            <section class="content-section">
+            <section class="daily-section">
 
                 <div class="section-heading">
 
                     <div>
 
                         <p class="eyebrow">
-                            PLAY
+                            DISCOVER TODAY
                         </p>
 
+
                         <h2>
-                            Maka Challenge
+                            3 Words of the Day
                         </h2>
 
                     </div>
 
+
                     <button
                         class="text-button"
-                        data-route="game"
                         type="button"
+                        onclick="navigateTo('daily')"
                     >
-                        Play →
+                        View all →
                     </button>
 
                 </div>
 
 
-                <div class="app-card">
+                <div class="daily-slider">
+
+    <div class="daily-slider-track">
+
+        ${dailyWords.map(
+            (item, index) => `
+
+            <article class="daily-slide">
+
+                <div class="daily-card">
+
+                    <span class="daily-number">
+
+                        ${String(index + 1).padStart(2, "0")} / 03
+
+                    </span>
 
                     <h3>
-                        How well do you know
-                        Angolan slang?
+
+                        ${item.word}
+
                     </h3>
 
                     <p>
-                        Five quick questions.
-                        Listen, guess and discover
-                        new expressions.
+
+                        Discover today's word.
+
                     </p>
 
                     <button
-                        class="primary-button"
-                        data-route="game"
                         type="button"
+                        onclick="openDemoWord(${item.id})"
                     >
-                        Start challenge
+
+                        Discover →
+
                     </button>
 
                 </div>
 
-            </section>
+            </article>
 
-        </section>
+        `
+        ).join("")}
 
-    `;
+    </div>
 
-}
+</div>
 
 
-/* =========================================
-   DAILY CARD
-========================================= */
+<div class="slider-dots">
 
-function createDailyCard(
-    number,
-    word,
-    meaning
-) {
+    ${dailyWords.map(
+        (_, index) => `
 
-    return `
+        <button
+            class="slider-dot ${index === 0 ? "active" : ""}"
+            type="button"
+            aria-label="Go to word ${index + 1}"
+        ></button>
 
-        <article class="daily-card">
+    `
+    ).join("")}
 
-            <span class="daily-number">
-                0${number}
-            </span>
-
-            <h3>
-                ${word}
-            </h3>
-
-            <p>
-                ${meaning}
-            </p>
-
-            <button
-                type="button"
-                data-word="${word}"
-            >
-                Discover →
-            </button>
-
-        </article>
-
-    `;
-
-}
-
-
-/* =========================================
-   DICTIONARY PAGE
-========================================= */
-
-function renderDictionary() {
-
-    mainContent.innerHTML = `
-
-        <section class="page">
-
-            <p class="eyebrow">
-                DICTIONARY
-            </p>
-
-            <h1 class="page-title">
-                Explore the words.
-            </h1>
-
-            <p class="page-description">
-                Search and discover Angolan words,
-                expressions and phrases.
-            </p>
-
-
-            <div class="home-search">
-
-                <div class="search-box">
-
-                    <span>⌕</span>
-
-                    <input
-                        id="dictionary-search-input"
-                        type="search"
-                        placeholder="Search words or expressions..."
-                        autocomplete="off"
-                    >
-
-                </div>
-
-            </div>
-
-
-            <section class="content-section">
-
-                <div class="section-heading">
-
-                    <h2>
-                        Categories
-                    </h2>
-
-                </div>
-
-
-                <div class="card-grid">
-
-                    ${createSimpleCard(
-                        "Everyday",
-                        "Words and expressions from everyday conversation."
-                    )}
-
-                    ${createSimpleCard(
-                        "People",
-                        "Words used to describe people and relationships."
-                    )}
-
-                    ${createSimpleCard(
-                        "Expressions",
-                        "Interesting Angolan expressions and phrases."
-                    )}
-
-                </div>
-
-            </section>
-
-        </section>
-
-    `;
-
-}
-
-
-/* =========================================
-   SEARCH PAGE
-========================================= */
-
-function renderSearch() {
-
-    mainContent.innerHTML = `
-
-        <section class="page">
-
-            <p class="eyebrow">
-                SEARCH
-            </p>
-
-            <h1 class="page-title">
-                Find a word.
-            </h1>
-
-            <div class="home-search">
-
-                <div class="search-box">
-
-                    <span>⌕</span>
-
-                    <input
-                        id="search-page-input"
-                        type="search"
-                        placeholder="Search the dictionary..."
-                        autocomplete="off"
-                    >
-
-                </div>
-
-            </div>
-
-
-            <div
-                id="search-results"
-                class="content-section"
-            >
-
-                <div class="app-card">
-
-                    <h3>
-                        Start searching
-                    </h3>
-
-                    <p>
-                        Search for an Angolan word
-                        or expression.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    `;
-
-}
-
-
-/* =========================================
-   SAVED PAGE
-========================================= */
-
-function renderSaved() {
-
-    mainContent.innerHTML = `
-
-        <section class="page">
-
-            <p class="eyebrow">
-                YOUR WORDS
-            </p>
-
-            <h1 class="page-title">
-                Saved.
-            </h1>
-
-            <p class="page-description">
-                Words and expressions you've saved
-                for later.
-            </p>
-
-
-            <section class="content-section">
-
-                <div class="app-card">
-
-                    <h3>
-                        Your saved words
-                    </h3>
-
-                    <p>
-                        Your saved dictionary entries
-                        will appear here.
-                    </p>
-
-                </div>
+</div>
 
             </section>
 
@@ -562,118 +441,75 @@ function renderSaved() {
    DAILY PAGE
 ========================================= */
 
-function renderDaily() {
+function renderDailyPage() {
 
-    mainContent.innerHTML = `
+    return `
 
-        <section class="page">
+        <section class="home-page">
 
             <p class="eyebrow">
-                DAILY DISCOVERY
-            </p>
-
-            <h1 class="page-title">
-                Your Daily 3.
-            </h1>
-
-            <p class="page-description">
-                Three Angolan words or expressions
-                to discover today.
+                TODAY'S DISCOVERY
             </p>
 
 
-            <section class="content-section">
-
-                <div class="daily-slider">
-
-                    <div class="daily-slider-track">
-
-                        <div class="daily-slide">
-
-                            ${createDailyCard(
-                                1,
-                                "Mambo",
-                                "Thing, matter or situation."
-                            )}
-
-                        </div>
+            <h2
+                style="
+                    font-size: clamp(42px, 7vw, 64px);
+                    letter-spacing: -2px;
+                "
+            >
+                3 Words of the Day
+            </h2>
 
 
-                        <div class="daily-slide">
+            <div
+                class="daily-grid"
+                style="
+                    margin-top: 30px;
+                "
+            >
 
-                            ${createDailyCard(
-                                2,
-                                "Kota",
-                                "An older or respected person."
-                            )}
+                ${dailyWords.map(
+                    (item, index) => `
 
-                        </div>
+                    <article class="daily-card">
 
+                        <span class="daily-number">
 
-                        <div class="daily-slide">
+                            0${index + 1}
 
-                            ${createDailyCard(
-                                3,
-                                "Maka",
-                                "A problem, issue or trouble."
-                            )}
-
-                        </div>
-
-                    </div>
-
-                </div>
+                        </span>
 
 
-                <div class="slider-dots">
+                        <h3>
 
-                    <button
-                        class="slider-dot active"
-                        type="button"
-                        aria-label="Daily word 1"
-                    ></button>
+                            ${item.word}
 
-                    <button
-                        class="slider-dot"
-                        type="button"
-                        aria-label="Daily word 2"
-                    ></button>
-
-                    <button
-                        class="slider-dot"
-                        type="button"
-                        aria-label="Daily word 3"
-                    ></button>
-
-                </div>
-
-            </section>
+                        </h3>
 
 
-            <section class="content-section">
+                        <p>
 
-                <div class="app-card">
+                            Discover today's word.
 
-                    <h3>
-                        Today's challenge
-                    </h3>
+                        </p>
 
-                    <p>
-                        Test what you've just discovered
-                        in the Maka Challenge.
-                    </p>
 
-                    <button
-                        class="primary-button"
-                        data-route="game"
-                        type="button"
-                    >
-                        Play challenge
-                    </button>
+                        <button
+                            type="button"
+                            onclick="openDemoWord(${item.id})"
+                        >
 
-                </div>
+                            Discover →
 
-            </section>
+                        </button>
+
+                    </article>
+
+                `
+                ).join("")}
+
+            </div>
 
         </section>
 
@@ -683,133 +519,108 @@ function renderDaily() {
 
 
 /* =========================================
-   PACKS PAGE
+   TEMPORARY WORD PREVIEW
 ========================================= */
 
-function renderPacks() {
+function openDemoWord(id) {
+
+    const word =
+        demoWords.find(
+            (item) => item.id === id
+        );
+
+
+    if (!word) {
+
+        return;
+
+    }
+
+
+    appState.previousPage =
+        appState.currentPage;
+
+
+    const mainContent =
+        document.getElementById(
+            "main-content"
+        );
+
 
     mainContent.innerHTML = `
 
-        <section class="page">
+        <section class="home-page">
 
-            <p class="eyebrow">
-                COLLECTIONS
-            </p>
+            <button
+                class="text-button"
+                type="button"
+                onclick="navigateTo(
+                    '${appState.previousPage}'
+                )"
+            >
 
-            <h1 class="page-title">
-                Explore Packs.
-            </h1>
+                ← Back
 
-            <p class="page-description">
-                Discover words organised around
-                different parts of Angolan life and culture.
-            </p>
+            </button>
 
 
-            <section class="content-section">
+            <div
+                class="hero"
+                style="
+                    margin-top: 25px;
+                "
+            >
 
-                <div class="card-grid">
+                <p class="eyebrow">
+                    WORD PREVIEW
+                </p>
 
-                    ${createSimpleCard(
-                        "Starter",
-                        "50 words available for everyone.",
-                        "FREE"
-                    )}
 
-                    ${createSimpleCard(
-                        "Everyday Angola",
-                        "Words and expressions from everyday conversation.",
-                        "PREMIUM"
-                    )}
+                <h2>
 
-                    ${createSimpleCard(
-                        "Street Talk",
-                        "Informal expressions and everyday street language.",
-                        "PREMIUM"
-                    )}
+                    ${word.word}
 
-                    ${createSimpleCard(
-                        "Expressions",
-                        "Interesting expressions and phrases.",
-                        "PREMIUM"
-                    )}
+                </h2>
 
-                    ${createSimpleCard(
-                        "Love & Relationships",
-                        "Words and expressions used around relationships.",
-                        "PREMIUM"
-                    )}
 
-                    ${createSimpleCard(
-                        "Work & Business",
-                        "Expressions you may encounter professionally.",
-                        "PREMIUM"
-                    )}
+                <p
+                    class="hero-description"
+                >
+
+                    ${word.meaning}
+
+                </p>
+
+
+                <div
+                    style="
+                        margin-top: 28px;
+                        padding: 22px;
+                        background: var(--surface-soft);
+                        border-radius: var(--radius-md);
+                        color: var(--text-secondary);
+                        line-height: 1.7;
+                    "
+                >
+
+                    “${word.example}”
 
                 </div>
 
-            </section>
+            </div>
 
         </section>
 
     `;
 
-}
 
+    window.scrollTo({
 
-/* =========================================
-   GAME PAGE
-========================================= */
+        top: 0,
 
-function renderGame() {
+        behavior: "smooth"
 
-    mainContent.innerHTML = `
-
-        <section class="page">
-
-            <p class="eyebrow">
-                PLAY
-            </p>
-
-            <h1 class="page-title">
-                Maka Challenge.
-            </h1>
-
-            <p class="page-description">
-                Five quick questions. Listen,
-                guess and discover.
-            </p>
-
-
-            <section class="content-section">
-
-                <div class="app-card">
-
-                    <h3>
-                        Ready?
-                    </h3>
-
-                    <p>
-                        The challenge will test your
-                        knowledge of Angolan slang through
-                        meaning, context and audio.
-                    </p>
-
-                    <button
-                        class="primary-button"
-                        id="start-game-button"
-                        type="button"
-                    >
-                        Start challenge
-                    </button>
-
-                </div>
-
-            </section>
-
-        </section>
-
-    `;
+    });
 
 }
 
@@ -820,40 +631,63 @@ function renderGame() {
 
 function renderUpdates() {
 
-    mainContent.innerHTML = `
+    return `
 
-        <section class="page">
+        <section class="home-page">
 
             <p class="eyebrow">
                 WHAT'S NEW
             </p>
 
-            <h1 class="page-title">
-                Updates.
-            </h1>
 
-            <p class="page-description">
-                New words, packs and improvements
-                added to the dictionary.
-            </p>
+            <h2
+                style="
+                    font-size: clamp(42px, 7vw, 64px);
+                    letter-spacing: -2px;
+                "
+            >
+                Updates
+            </h2>
 
 
-            <section class="content-section">
+            <div
+                class="hero"
+                style="
+                    margin-top: 30px;
+                "
+            >
 
-                <div class="app-card">
+                <p class="eyebrow">
 
-                    <h3>
-                        No updates yet
-                    </h3>
+                    COMING SOON
 
-                    <p>
-                        New content will appear here
-                        as the dictionary grows.
-                    </p>
+                </p>
 
-                </div>
 
-            </section>
+                <h3
+                    style="
+                        font-size: 28px;
+                    "
+                >
+
+                    New update
+
+                </h3>
+
+
+                <p class="hero-description">
+
+                    A new dictionary update
+                    will be announced here.
+
+                    In the future, updates such as
+                    “New update coming on September 1st, 2026”
+                    can be created directly from
+                    the admin dashboard.
+
+                </p>
+
+            </div>
 
         </section>
 
@@ -868,41 +702,53 @@ function renderUpdates() {
 
 function renderAbout() {
 
-    mainContent.innerHTML = `
+    return `
 
-        <section class="page">
+        <section class="home-page">
 
             <p class="eyebrow">
-                ABOUT
-            </p>
-
-            <h1 class="page-title">
-                About the Dictionary.
-            </h1>
-
-            <p class="page-description">
-                A growing collection of Angolan slang,
-                expressions and everyday language.
+                THE PROJECT
             </p>
 
 
-            <section class="content-section">
+            <h2
+                style="
+                    font-size: clamp(42px, 7vw, 64px);
+                    letter-spacing: -2px;
+                "
+            >
+                About
+            </h2>
 
-                <div class="app-card">
 
-                    <h3>
-                        Discover Angola through language.
-                    </h3>
+            <div
+                class="hero"
+                style="
+                    margin-top: 30px;
+                "
+            >
 
-                    <p>
-                        Explore meanings, natural examples,
-                        authentic audio and expressions used
-                        in everyday Angolan life.
-                    </p>
+                <h3
+                    style="
+                        font-size: 30px;
+                    "
+                >
 
-                </div>
+                    Angolan Slang Dictionary
 
-            </section>
+                </h3>
+
+
+                <p class="hero-description">
+
+                    A digital dictionary designed
+                    to preserve, explore and share
+                    Angolan slang, expressions
+                    and everyday language.
+
+                </p>
+
+            </div>
 
         </section>
 
@@ -912,39 +758,55 @@ function renderAbout() {
 
 
 /* =========================================
-   SETTINGS PAGE
+   GENERIC PLACEHOLDER PAGE
 ========================================= */
 
-function renderSettings() {
+function renderComingSoon(
+    title,
+    description
+) {
 
-    mainContent.innerHTML = `
+    return `
 
-        <section class="page">
+        <section class="home-page">
 
-            <p class="eyebrow">
-                APP
-            </p>
+            <div class="hero">
 
-            <h1 class="page-title">
-                Settings.
-            </h1>
+                <p class="eyebrow">
+                    UNDER DEVELOPMENT
+                </p>
 
-            <section class="content-section">
 
-                <div class="app-card">
+                <h2>
 
-                    <h3>
-                        Settings
-                    </h3>
+                    ${title}
 
-                    <p>
-                        App preferences and account settings
-                        will appear here.
-                    </p>
+                </h2>
+
+
+                <p class="hero-description">
+
+                    ${description}
+
+                </p>
+
+
+                <div
+                    style="
+                        margin-top: 30px;
+                        padding: 20px;
+                        background: var(--gold-light);
+                        border-radius: var(--radius-md);
+                        color: var(--text-primary);
+                    "
+                >
+
+                    We are building this section
+                    step by step.
 
                 </div>
 
-            </section>
+            </div>
 
         </section>
 
@@ -954,23 +816,140 @@ function renderSettings() {
 
 
 /* =========================================
-   PROFILE PAGE
+   MENU
 ========================================= */
 
-function renderProfile() {
+const menuButton =
+    document.getElementById(
+        "menu-button"
+    );
 
-    mainContent.innerHTML = `
 
-        <section class="page">
+const closeMenuButton =
+    document.getElementById(
+        "close-menu"
+    );
 
-            <p class="eyebrow">
-                YOUR ACCOUNT
-            </p>
 
-            <h1 class="page-title">
-                My Profile.
-            </h1>
+const sideMenu =
+    document.getElementById(
+        "side-menu"
+    );
 
-            <section class="content-section">
 
-                <div 
+const menuOverlay =
+    document.getElementById(
+        "menu-overlay"
+    );
+
+
+function openMenu() {
+
+    sideMenu.classList.add("open");
+
+    menuOverlay.classList.add("open");
+
+}
+
+
+function closeMenu() {
+
+    sideMenu.classList.remove("open");
+
+    menuOverlay.classList.remove("open");
+
+}
+
+
+menuButton.addEventListener(
+    "click",
+    openMenu
+);
+
+
+closeMenuButton.addEventListener(
+    "click",
+    closeMenu
+);
+
+
+menuOverlay.addEventListener(
+    "click",
+    closeMenu
+);
+
+
+/* =========================================
+   BOTTOM NAVIGATION
+========================================= */
+
+document
+    .querySelectorAll(".nav-item")
+    .forEach((item) => {
+
+        item.addEventListener(
+            "click",
+            () => {
+
+                navigateTo(
+                    item.dataset.page
+                );
+
+            }
+        );
+
+    });
+
+
+/* =========================================
+   INITIALIZE APPLICATION
+========================================= */
+document.addEventListener(
+    "scroll",
+    () => {
+
+        const slider =
+            document.querySelector(
+                ".daily-slider"
+            );
+
+
+        if (!slider) {
+
+            return;
+
+        }
+
+
+        const slideWidth =
+            slider.clientWidth;
+
+
+        const currentIndex =
+            Math.round(
+                slider.scrollLeft /
+                slideWidth
+            );
+
+
+        const dots =
+            document.querySelectorAll(
+                ".slider-dot"
+            );
+
+
+        dots.forEach(
+            (dot, index) => {
+
+                dot.classList.toggle(
+                    "active",
+                    index === currentIndex
+                );
+
+            }
+        );
+
+    },
+    true
+);
+renderPage();
