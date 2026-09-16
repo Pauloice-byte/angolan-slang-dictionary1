@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
 
@@ -14,6 +13,11 @@
         content="#A63D40"
     >
 
+    <meta
+        name="description"
+        content="Discover Angolan slang, expressions, meanings and natural examples."
+    >
+
     <title>Angolan Slang Dictionary</title>
 
     <link rel="stylesheet" href="style.css">
@@ -21,13 +25,12 @@
 
 <body>
 
-    <!-- =========================
-         APP
-    ========================== -->
-
     <div id="app">
 
-        <!-- Decorative Samakaka-inspired pattern -->
+        <!-- =========================
+             DECORATIVE PATTERN
+        ========================== -->
+
         <div class="pattern pattern-top"></div>
 
 
@@ -40,7 +43,7 @@
             <button
                 class="brand"
                 type="button"
-                onclick="navigateTo('home')"
+                data-route="home"
                 aria-label="Go to home"
             >
 
@@ -49,15 +52,8 @@
                 </div>
 
                 <div class="brand-text">
-
-                    <strong>
-                        Angolan Slang
-                    </strong>
-
-                    <span>
-                        Dictionary
-                    </span>
-
+                    <strong>Angolan Slang</strong>
+                    <span>Dictionary</span>
                 </div>
 
             </button>
@@ -76,86 +72,65 @@
 
 
         <!-- =========================
-             MAIN APP CONTENT
+             MAIN CONTENT
         ========================== -->
 
-        <main id="main-content">
-
-            <!-- JavaScript renders pages here -->
-
-        </main>
+        <main id="main-content"></main>
 
 
         <!-- =========================
              BOTTOM NAVIGATION
         ========================== -->
 
-        <nav class="bottom-navigation">
+        <nav
+            class="bottom-navigation"
+            aria-label="Main navigation"
+        >
 
             <button
                 class="nav-item active"
-                data-page="home"
+                data-route="home"
                 type="button"
             >
-
                 <span class="nav-icon">⌂</span>
-
-                <span class="nav-label">
-                    Home
-                </span>
-
+                <span class="nav-label">Home</span>
             </button>
 
 
             <button
                 class="nav-item"
-                data-page="dictionary"
+                data-route="dictionary"
                 type="button"
             >
-
                 <span class="nav-icon">▤</span>
-
-                <span class="nav-label">
-                    Dictionary
-                </span>
-
+                <span class="nav-label">Dictionary</span>
             </button>
 
 
             <button
                 class="nav-item nav-search"
-                data-page="search"
+                data-route="search"
                 type="button"
             >
-
                 <span class="nav-icon">⌕</span>
-
-                <span class="nav-label">
-                    Search
-                </span>
-
+                <span class="nav-label">Search</span>
             </button>
 
 
             <button
                 class="nav-item"
-                data-page="saved"
+                data-route="saved"
                 type="button"
             >
-
                 <span class="nav-icon">♡</span>
-
-                <span class="nav-label">
-                    Saved
-                </span>
-
+                <span class="nav-label">Saved</span>
             </button>
 
         </nav>
 
 
         <!-- =========================
-             MENU PANEL
+             SIDE MENU
         ========================== -->
 
         <div
@@ -167,12 +142,12 @@
         <aside
             class="side-menu"
             id="side-menu"
+            aria-hidden="true"
         >
 
             <div class="menu-header">
 
                 <div>
-
                     <p class="menu-small-title">
                         ANGOLAN SLANG
                     </p>
@@ -180,7 +155,6 @@
                     <h2>
                         Explore
                     </h2>
-
                 </div>
 
 
@@ -198,7 +172,8 @@
 
             <button
                 class="menu-item"
-                onclick="navigateTo('daily')"
+                data-route="daily"
+                type="button"
             >
                 <span>☀</span>
                 3 Words of the Day
@@ -207,7 +182,28 @@
 
             <button
                 class="menu-item"
-                onclick="navigateTo('updates')"
+                data-route="packs"
+                type="button"
+            >
+                <span>▦</span>
+                Packs
+            </button>
+
+
+            <button
+                class="menu-item"
+                data-route="game"
+                type="button"
+            >
+                <span>✦</span>
+                Maka Challenge
+            </button>
+
+
+            <button
+                class="menu-item"
+                data-route="updates"
+                type="button"
             >
                 <span>✦</span>
                 Updates
@@ -216,7 +212,8 @@
 
             <button
                 class="menu-item"
-                onclick="navigateTo('about')"
+                data-route="about"
+                type="button"
             >
                 <span>i</span>
                 About the Dictionary
@@ -225,10 +222,21 @@
 
             <button
                 class="menu-item"
-                onclick="navigateTo('settings')"
+                data-route="settings"
+                type="button"
             >
                 <span>⚙</span>
                 Settings
+            </button>
+
+
+            <button
+                class="menu-item"
+                data-route="profile"
+                type="button"
+            >
+                <span>●</span>
+                My Profile
             </button>
 
         </aside>
@@ -239,5 +247,4 @@
     <script src="script.js"></script>
 
 </body>
-
 </html>
