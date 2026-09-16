@@ -1,1451 +1,976 @@
 /* =========================================
    ANGOLAN SLANG DICTIONARY
-   SAMAKAKA-INSPIRED DESIGN SYSTEM
+   APPLICATION FOUNDATION
 ========================================= */
 
 
 /* =========================================
-   DESIGN VARIABLES
+   APPLICATION STATE
 ========================================= */
 
-:root {
+const appState = {
 
-    --red: #A63D40;
-    --red-dark: #7D292C;
-    --red-light: #F4DEDC;
+    currentRoute: "home",
 
-    --gold: #D89B2B;
-    --gold-light: #F7E8C5;
+    menuOpen: false,
 
-    --green: #386A4B;
-    --green-light: #DCE9DF;
+    searchQuery: "",
 
-    --blue: #263D5B;
-    --blue-light: #DDE4ED;
+    initialized: false
 
-    --background: #F6F0E5;
-    --surface: #FFFFFF;
-    --surface-soft: #EEE6D8;
+};
 
-    --text-primary: #211D1A;
-    --text-secondary: #706860;
-    --text-light: #A69D93;
 
-    --border: #DED4C6;
+/* =========================================
+   DOM ELEMENTS
+========================================= */
 
-    --primary: var(--red);
-    --primary-dark: var(--red-dark);
+const mainContent =
+    document.getElementById(
+        "main-content"
+    );
 
-    --shadow-sm:
-        0 3px 10px
-        rgba(33, 29, 26, 0.06);
+const menuButton =
+    document.getElementById(
+        "menu-button"
+    );
 
-    --shadow-md:
-        0 10px 30px
-        rgba(33, 29, 26, 0.10);
+const closeMenuButton =
+    document.getElementById(
+        "close-menu"
+    );
 
-    --shadow-lg:
-        0 25px 60px
-        rgba(33, 29, 26, 0.15);
+const menuOverlay =
+    document.getElementById(
+        "menu-overlay"
+    );
 
-    --radius-sm: 12px;
-    --radius-md: 18px;
-    --radius-lg: 26px;
-    --radius-xl: 36px;
+const sideMenu =
+    document.getElementById(
+        "side-menu"
+    );
 
-    --max-width: 1100px;
+
+/* =========================================
+   ROUTES
+========================================= */
+
+const routes = {
+
+    home: renderHome,
+
+    dictionary: renderDictionary,
+
+    search: renderSearch,
+
+    saved: renderSaved,
+
+    daily: renderDaily,
+
+    packs: renderPacks,
+
+    game: renderGame,
+
+    updates: renderUpdates,
+
+    about: renderAbout,
+
+    settings: renderSettings,
+
+    profile: renderProfile
+
+};
+
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+function navigateTo(route) {
+
+    if (!routes[route]) {
+
+        route = "home";
+
+    }
+
+    appState.currentRoute = route;
+
+    closeMenu();
+
+    renderPage();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+function renderPage() {
+
+    const renderer =
+        routes[
+            appState.currentRoute
+        ];
+
+    if (!renderer) {
+
+        appState.currentRoute = "home";
+
+        routes.home();
+
+        updateNavigation();
+
+        return;
+
+    }
+
+    renderer();
+
+    updateNavigation();
+
+    initializePageFeatures();
+
 }
 
 
 /* =========================================
-   RESET
+   NAVIGATION STATE
 ========================================= */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-
-html {
-    min-height: 100%;
-    scroll-behavior: smooth;
-}
-
-
-body {
-    min-height: 100vh;
-
-    background: var(--background);
-
-    color: var(--text-primary);
-
-    font-family:
-        Inter,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-
-    -webkit-font-smoothing: antialiased;
-}
-
-
-button,
-input {
-    font: inherit;
-}
-
-
-button {
-    border: none;
-    cursor: pointer;
-}
-
-
-button:focus-visible,
-input:focus-visible {
-    outline: 3px solid
-        rgba(166, 61, 64, 0.35);
-
-    outline-offset: 3px;
-}
-
-
-button:disabled {
-    cursor: not-allowed;
-}
-
-
-/* =========================================
-   APP
-========================================= */
-
-#app {
-    min-height: 100vh;
-
-    position: relative;
-
-    overflow-x: hidden;
-
-    padding-bottom: 100px;
-}
-
-
-/* =========================================
-   PATTERN
-========================================= */
-
-.pattern {
-    position: absolute;
-
-    pointer-events: none;
-
-    opacity: 0.9;
-
-    z-index: 0;
-}
-
-
-.pattern-top {
-    top: 0;
-    left: 0;
-    right: 0;
-
-    height: 110px;
-
-    background-image:
-        url("assets/samakaka-pattern.png");
-
-    background-size: cover;
-
-    background-position: center;
-
-    background-repeat: no-repeat;
-}
-
-
-/* =========================================
-   HEADER
-========================================= */
-
-.header {
-    width: 100%;
-
-    max-width: var(--max-width);
-
-    min-height: 90px;
-
-    margin: 0 auto;
-
-    padding: 18px 24px;
-
-    position: relative;
-
-    z-index: 10;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-}
-
-
-.brand {
-    display: flex;
-
-    align-items: center;
-
-    gap: 11px;
-
-    background: transparent;
-
-    text-align: left;
-}
-
-
-.brand-symbol {
-    width: 46px;
-    height: 46px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    background: var(--red);
-
-    color: white;
-
-    border: 3px solid var(--gold);
-
-    border-radius: 16px;
-
-    font-size: 22px;
-
-    font-weight: 900;
-
-    box-shadow: var(--shadow-sm);
-}
-
-
-.brand-text {
-    display: flex;
-
-    flex-direction: column;
-}
-
-
-.brand-text strong {
-    font-size: 16px;
-
-    font-weight: 800;
-
-    line-height: 1.15;
-}
-
-
-.brand-text span {
-    margin-top: 2px;
-
-    color: var(--text-secondary);
-
-    font-size: 12px;
-}
-
-
-.header-button {
-    width: 44px;
-    height: 44px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    background: var(--surface);
-
-    color: var(--blue);
-
-    border: 1px solid var(--border);
-
-    border-radius: 50%;
-
-    font-size: 21px;
-
-    box-shadow: var(--shadow-sm);
-}
-
-
-/* =========================================
-   MAIN CONTENT
-========================================= */
-
-#main-content {
-    width: 100%;
-
-    max-width: var(--max-width);
-
-    margin: 0 auto;
-
-    padding: 20px 24px;
-
-    position: relative;
-
-    z-index: 2;
-}
-
-
-/* =========================================
-   PAGE
-========================================= */
-
-.page {
-    width: 100%;
-}
-
-
-.page-title {
-    margin-bottom: 8px;
-
-    font-size: clamp(38px, 6vw, 60px);
-
-    line-height: 1;
-
-    letter-spacing: -2px;
-}
-
-
-.page-description {
-    max-width: 620px;
-
-    color: var(--text-secondary);
-
-    font-size: 16px;
-
-    line-height: 1.7;
-}
-
-
-/* =========================================
-   HOME
-========================================= */
-
-.home-page {
-    padding-top: 20px;
-}
-
-
-.hero {
-    position: relative;
-
-    overflow: hidden;
-
-    padding:
-        55px
-        45px
-        55px;
-
-    background: var(--surface);
-
-    border:
-        2px solid
-        var(--gold);
-
-    border-radius: var(--radius-xl);
-
-    box-shadow: var(--shadow-md);
-}
-
-
-.hero::before {
-    content: "";
-
-    position: absolute;
-
-    top: 0;
-    right: 0;
-
-    width: 150px;
-    height: 150px;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--red) 25%,
-            var(--gold) 25%,
-            var(--gold) 50%,
-            var(--green) 50%,
-            var(--green) 75%,
-            var(--blue) 75%
+function updateNavigation() {
+
+    const navItems =
+        document.querySelectorAll(
+            ".nav-item"
         );
 
-    opacity: 0.16;
+    navItems.forEach(
+        (item) => {
 
-    clip-path:
-        polygon(
-            0 0,
-            100% 0,
-            100% 100%
-        );
-}
+            const route =
+                item.dataset.route;
 
+            item.classList.toggle(
+                "active",
+                route ===
+                appState.currentRoute
+            );
 
-.hero::after {
-    content: "";
+        }
+    );
 
-    position: absolute;
-
-    left: -40px;
-    bottom: -60px;
-
-    width: 190px;
-    height: 190px;
-
-    border:
-        24px solid
-        var(--gold-light);
-
-    border-radius: 50%;
-
-    opacity: 0.8;
-}
-
-
-.hero > * {
-    position: relative;
-
-    z-index: 2;
-}
-
-
-.eyebrow {
-    color: var(--red);
-
-    font-size: 11px;
-
-    font-weight: 900;
-
-    letter-spacing: 1.7px;
-
-    margin-bottom: 16px;
-}
-
-
-.hero h2 {
-    max-width: 680px;
-
-    font-size:
-        clamp(48px, 7vw, 78px);
-
-    line-height: 0.96;
-
-    letter-spacing: -3px;
-}
-
-
-.hero h2 span {
-    color: var(--red);
-}
-
-
-.hero-description {
-    max-width: 530px;
-
-    margin-top: 25px;
-
-    color: var(--text-secondary);
-
-    font-size: 16px;
-
-    line-height: 1.7;
-}
-
-
-.primary-button {
-    margin-top: 30px;
-
-    min-height: 52px;
-
-    padding:
-        14px
-        22px;
-
-    display: inline-flex;
-
-    align-items: center;
-    justify-content: center;
-
-    gap: 12px;
-
-    background: var(--red);
-
-    color: white;
-
-    border-radius: 999px;
-
-    font-weight: 800;
-
-    box-shadow:
-        0 8px 20px
-        rgba(166, 61, 64, 0.25);
-
-    transition:
-        transform 0.2s ease,
-        background 0.2s ease;
-}
-
-
-.primary-button:hover {
-    background: var(--red-dark);
-
-    transform: translateY(-2px);
 }
 
 
 /* =========================================
-   SEARCH
+   HOME PAGE
 ========================================= */
 
-.home-search {
-    margin:
-        25px
-        0
-        65px;
-}
+function renderHome() {
+
+    mainContent.innerHTML = `
+
+        <section class="page home-page">
+
+            <div class="hero">
+
+                <p class="eyebrow">
+                    ANGOLAN SLANG DICTIONARY
+                </p>
+
+                <h2>
+                    Discover the
+                    <span>language</span>
+                    of Angola.
+                </h2>
+
+                <p class="hero-description">
+                    Explore Angolan slang, expressions,
+                    meanings and natural examples —
+                    all in one place.
+                </p>
+
+                <button
+                    class="primary-button"
+                    data-route="dictionary"
+                    type="button"
+                >
+                    Explore the dictionary
+                    <span>→</span>
+                </button>
+
+            </div>
 
 
-.search-box {
-    min-height: 68px;
+            <div class="home-search">
 
-    display: flex;
+                <div class="search-box">
 
-    align-items: center;
+                    <span>⌕</span>
 
-    gap: 12px;
+                    <input
+                        id="home-search-input"
+                        type="search"
+                        placeholder="Search a word or expression..."
+                        autocomplete="off"
+                    >
 
-    padding:
-        8px
-        20px;
+                </div>
 
-    background: var(--surface);
-
-    border: 1px solid var(--border);
-
-    border-radius: var(--radius-lg);
-
-    box-shadow: var(--shadow-sm);
-}
+            </div>
 
 
-.search-box span {
-    color: var(--red);
+            <section class="content-section daily-section">
 
-    font-size: 26px;
-}
+                <div class="section-heading">
+
+                    <h2>
+                        Today's 3
+                    </h2>
+
+                    <button
+                        class="text-button"
+                        data-route="daily"
+                        type="button"
+                    >
+                        See all →
+                    </button>
+
+                </div>
 
 
-.search-box input {
-    width: 100%;
+                <div class="daily-grid">
 
-    padding: 14px 0;
+                    ${createDailyCard(
+                        1,
+                        "Mambo",
+                        "Thing, matter or situation."
+                    )}
 
-    border: none;
+                    ${createDailyCard(
+                        2,
+                        "Kota",
+                        "An older or respected person."
+                    )}
 
-    outline: none;
+                    ${createDailyCard(
+                        3,
+                        "Maka",
+                        "A problem, issue or trouble."
+                    )}
 
-    background: transparent;
+                </div>
 
-    color: var(--text-primary);
+            </section>
+
+
+            <section class="content-section">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            PLAY
+                        </p>
+
+                        <h2>
+                            Maka Challenge
+                        </h2>
+
+                    </div>
+
+                    <button
+                        class="text-button"
+                        data-route="game"
+                        type="button"
+                    >
+                        Play →
+                    </button>
+
+                </div>
+
+
+                <div class="app-card">
+
+                    <h3>
+                        How well do you know
+                        Angolan slang?
+                    </h3>
+
+                    <p>
+                        Five quick questions.
+                        Listen, guess and discover
+                        new expressions.
+                    </p>
+
+                    <button
+                        class="primary-button"
+                        data-route="game"
+                        type="button"
+                    >
+                        Start challenge
+                    </button>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    `;
+
 }
 
 
 /* =========================================
-   SECTIONS
+   DAILY CARD
 ========================================= */
 
-.content-section {
-    padding-bottom: 40px;
-}
+function createDailyCard(
+    number,
+    word,
+    meaning
+) {
 
+    return `
 
-.section-heading {
-    display: flex;
+        <article class="daily-card">
 
-    align-items: flex-end;
+            <span class="daily-number">
+                0${number}
+            </span>
 
-    justify-content: space-between;
+            <h3>
+                ${word}
+            </h3>
 
-    gap: 20px;
+            <p>
+                ${meaning}
+            </p>
 
-    margin-bottom: 24px;
-}
+            <button
+                type="button"
+                data-word="${word}"
+            >
+                Discover →
+            </button>
 
+        </article>
 
-.section-heading h2 {
-    font-size: 30px;
+    `;
 
-    letter-spacing: -1px;
-}
-
-
-.text-button {
-    background: transparent;
-
-    color: var(--red);
-
-    font-weight: 800;
 }
 
 
 /* =========================================
-   DAILY WORDS
+   DICTIONARY PAGE
 ========================================= */
 
-.daily-grid {
-    display: grid;
+function renderDictionary() {
 
-    grid-template-columns:
-        repeat(3, 1fr);
+    mainContent.innerHTML = `
 
-    gap: 16px;
-}
+        <section class="page">
 
+            <p class="eyebrow">
+                DICTIONARY
+            </p>
 
-.daily-card {
-    min-height: 230px;
+            <h1 class="page-title">
+                Explore the words.
+            </h1>
 
-    position: relative;
-
-    overflow: hidden;
-
-    padding: 24px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    background: var(--surface);
-
-    border:
-        2px solid
-        var(--gold);
-
-    border-radius: var(--radius-lg);
-
-    box-shadow: var(--shadow-sm);
-
-    transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
-}
+            <p class="page-description">
+                Search and discover Angolan words,
+                expressions and phrases.
+            </p>
 
 
-.daily-card:nth-child(2) {
-    background: var(--blue);
+            <div class="home-search">
 
-    color: white;
+                <div class="search-box">
 
-    border:
-        2px solid
-        var(--gold);
-}
+                    <span>⌕</span>
 
+                    <input
+                        id="dictionary-search-input"
+                        type="search"
+                        placeholder="Search words or expressions..."
+                        autocomplete="off"
+                    >
 
-.daily-card:hover {
-    transform: translateY(-5px);
+                </div>
 
-    box-shadow:
-        0 8px 24px
-        rgba(216, 155, 43, 0.18);
-}
+            </div>
 
 
-.daily-number {
-    color: var(--red);
+            <section class="content-section">
 
-    font-size: 11px;
+                <div class="section-heading">
 
-    font-weight: 900;
+                    <h2>
+                        Categories
+                    </h2>
 
-    letter-spacing: 1px;
-}
-
-
-.daily-card:nth-child(2) .daily-number {
-    color: var(--gold);
-}
+                </div>
 
 
-.daily-card:nth-child(3) .daily-number {
-    color: var(--green);
-}
+                <div class="card-grid">
 
+                    ${createSimpleCard(
+                        "Everyday",
+                        "Words and expressions from everyday conversation."
+                    )}
 
-.daily-card h3 {
-    margin-top: auto;
+                    ${createSimpleCard(
+                        "People",
+                        "Words used to describe people and relationships."
+                    )}
 
-    font-size: 32px;
+                    ${createSimpleCard(
+                        "Expressions",
+                        "Interesting Angolan expressions and phrases."
+                    )}
 
-    letter-spacing: -1px;
-}
+                </div>
 
+            </section>
 
-.daily-card p {
-    margin-top: 8px;
+        </section>
 
-    color: var(--text-secondary);
+    `;
 
-    font-size: 14px;
-}
-
-
-.daily-card:nth-child(2) p {
-    color:
-        rgba(255, 255, 255, 0.75);
-}
-
-
-.daily-card button {
-    margin-top: 20px;
-
-    background: transparent;
-
-    color: var(--red);
-
-    text-align: left;
-
-    font-weight: 800;
-}
-
-
-.daily-card:nth-child(2) button {
-    color: var(--gold);
 }
 
 
 /* =========================================
-   DAILY SLIDER
+   SEARCH PAGE
 ========================================= */
 
-.daily-slider {
-    width: 100%;
+function renderSearch() {
 
-    overflow-x: auto;
+    mainContent.innerHTML = `
 
-    overflow-y: hidden;
+        <section class="page">
 
-    scroll-snap-type: x mandatory;
+            <p class="eyebrow">
+                SEARCH
+            </p>
 
-    scrollbar-width: none;
+            <h1 class="page-title">
+                Find a word.
+            </h1>
 
-    -webkit-overflow-scrolling: touch;
-}
+            <div class="home-search">
 
+                <div class="search-box">
 
-.daily-slider::-webkit-scrollbar {
-    display: none;
-}
+                    <span>⌕</span>
 
+                    <input
+                        id="search-page-input"
+                        type="search"
+                        placeholder="Search the dictionary..."
+                        autocomplete="off"
+                    >
 
-.daily-slider-track {
-    display: flex;
+                </div>
 
-    gap: 16px;
-}
-
-
-.daily-slide {
-    min-width: 100%;
-
-    scroll-snap-align: center;
-}
+            </div>
 
 
-.daily-slide .daily-card {
-    width: 100%;
+            <div
+                id="search-results"
+                class="content-section"
+            >
 
-    min-height: 260px;
+                <div class="app-card">
+
+                    <h3>
+                        Start searching
+                    </h3>
+
+                    <p>
+                        Search for an Angolan word
+                        or expression.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    `;
+
 }
 
 
 /* =========================================
-   SLIDER DOTS
+   SAVED PAGE
 ========================================= */
 
-.slider-dots {
-    display: flex;
+function renderSaved() {
 
-    align-items: center;
-    justify-content: center;
+    mainContent.innerHTML = `
 
-    gap: 8px;
+        <section class="page">
 
-    margin-top: 18px;
-}
+            <p class="eyebrow">
+                YOUR WORDS
+            </p>
 
+            <h1 class="page-title">
+                Saved.
+            </h1>
 
-.slider-dot {
-    width: 8px;
-    height: 8px;
-
-    padding: 0;
-
-    background: var(--border);
-
-    border-radius: 50%;
-
-    transition:
-        width 0.25s ease,
-        background 0.25s ease;
-}
+            <p class="page-description">
+                Words and expressions you've saved
+                for later.
+            </p>
 
 
-.slider-dot.active {
-    width: 26px;
+            <section class="content-section">
 
-    background: var(--red);
+                <div class="app-card">
 
-    border-radius: 999px;
+                    <h3>
+                        Your saved words
+                    </h3>
+
+                    <p>
+                        Your saved dictionary entries
+                        will appear here.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    `;
+
 }
 
 
 /* =========================================
-   GENERIC CARDS
+   DAILY PAGE
 ========================================= */
 
-.card-grid {
-    display: grid;
+function renderDaily() {
 
-    grid-template-columns:
-        repeat(3, 1fr);
+    mainContent.innerHTML = `
 
-    gap: 16px;
-}
+        <section class="page">
 
+            <p class="eyebrow">
+                DAILY DISCOVERY
+            </p>
 
-.app-card {
-    padding: 24px;
+            <h1 class="page-title">
+                Your Daily 3.
+            </h1>
 
-    background: var(--surface);
-
-    border:
-        1px solid
-        var(--border);
-
-    border-radius: var(--radius-lg);
-
-    box-shadow: var(--shadow-sm);
-}
+            <p class="page-description">
+                Three Angolan words or expressions
+                to discover today.
+            </p>
 
 
-.app-card h3 {
-    font-size: 22px;
+            <section class="content-section">
 
-    letter-spacing: -0.5px;
-}
+                <div class="daily-slider">
+
+                    <div class="daily-slider-track">
+
+                        <div class="daily-slide">
+
+                            ${createDailyCard(
+                                1,
+                                "Mambo",
+                                "Thing, matter or situation."
+                            )}
+
+                        </div>
 
 
-.app-card p {
-    margin-top: 8px;
+                        <div class="daily-slide">
 
-    color: var(--text-secondary);
+                            ${createDailyCard(
+                                2,
+                                "Kota",
+                                "An older or respected person."
+                            )}
 
-    line-height: 1.6;
+                        </div>
+
+
+                        <div class="daily-slide">
+
+                            ${createDailyCard(
+                                3,
+                                "Maka",
+                                "A problem, issue or trouble."
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="slider-dots">
+
+                    <button
+                        class="slider-dot active"
+                        type="button"
+                        aria-label="Daily word 1"
+                    ></button>
+
+                    <button
+                        class="slider-dot"
+                        type="button"
+                        aria-label="Daily word 2"
+                    ></button>
+
+                    <button
+                        class="slider-dot"
+                        type="button"
+                        aria-label="Daily word 3"
+                    ></button>
+
+                </div>
+
+            </section>
+
+
+            <section class="content-section">
+
+                <div class="app-card">
+
+                    <h3>
+                        Today's challenge
+                    </h3>
+
+                    <p>
+                        Test what you've just discovered
+                        in the Maka Challenge.
+                    </p>
+
+                    <button
+                        class="primary-button"
+                        data-route="game"
+                        type="button"
+                    >
+                        Play challenge
+                    </button>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    `;
+
 }
 
 
 /* =========================================
-   WORD DETAIL
+   PACKS PAGE
 ========================================= */
 
-.word-detail-page {
-    padding-bottom: 120px;
-}
+function renderPacks() {
+
+    mainContent.innerHTML = `
+
+        <section class="page">
+
+            <p class="eyebrow">
+                COLLECTIONS
+            </p>
+
+            <h1 class="page-title">
+                Explore Packs.
+            </h1>
+
+            <p class="page-description">
+                Discover words organised around
+                different parts of Angolan life and culture.
+            </p>
 
 
-.word-detail {
-    width: 100%;
+            <section class="content-section">
 
-    max-width: 760px;
+                <div class="card-grid">
 
-    margin: 35px auto 0;
-}
+                    ${createSimpleCard(
+                        "Starter",
+                        "50 words available for everyone.",
+                        "FREE"
+                    )}
 
+                    ${createSimpleCard(
+                        "Everyday Angola",
+                        "Words and expressions from everyday conversation.",
+                        "PREMIUM"
+                    )}
 
-.word-detail-header {
-    padding: 35px 0 40px;
-}
+                    ${createSimpleCard(
+                        "Street Talk",
+                        "Informal expressions and everyday street language.",
+                        "PREMIUM"
+                    )}
 
+                    ${createSimpleCard(
+                        "Expressions",
+                        "Interesting expressions and phrases.",
+                        "PREMIUM"
+                    )}
 
-.word-title-row {
-    display: flex;
+                    ${createSimpleCard(
+                        "Love & Relationships",
+                        "Words and expressions used around relationships.",
+                        "PREMIUM"
+                    )}
 
-    align-items: center;
+                    ${createSimpleCard(
+                        "Work & Business",
+                        "Expressions you may encounter professionally.",
+                        "PREMIUM"
+                    )}
 
-    justify-content: space-between;
+                </div>
 
-    gap: 20px;
-}
+            </section>
 
+        </section>
 
-.word-title-row h1 {
-    margin:
-        10px
-        0
-        12px;
+    `;
 
-    font-size:
-        clamp(
-            58px,
-            12vw,
-            100px
-        );
-
-    line-height: 0.95;
-
-    letter-spacing: -4px;
-
-    color: var(--text-primary);
-}
-
-
-.word-audio-button {
-    width: 52px;
-    height: 52px;
-
-    flex-shrink: 0;
-
-    border:
-        1px solid
-        var(--border);
-
-    border-radius: 50%;
-
-    background: var(--surface);
-
-    font-size: 20px;
-
-    cursor: pointer;
-
-    transition:
-        transform 0.2s ease,
-        background 0.2s ease;
-}
-
-
-.word-audio-button:not(:disabled):hover {
-    transform: scale(1.05);
-}
-
-
-.word-audio-button:disabled {
-    opacity: 0.35;
-
-    cursor: not-allowed;
-}
-
-
-.word-meta {
-    display: flex;
-
-    flex-wrap: wrap;
-
-    gap: 10px;
-}
-
-
-.word-meta span {
-    display: inline-flex;
-
-    align-items: center;
-
-    padding:
-        7px
-        12px;
-
-    border-radius: 999px;
-
-    background: var(--surface-soft);
-
-    color: var(--text-secondary);
-
-    font-size: 14px;
 }
 
 
 /* =========================================
-   DETAIL SECTIONS
+   GAME PAGE
 ========================================= */
 
-.word-detail-section {
-    padding:
-        28px
-        0;
+function renderGame() {
 
-    border-top:
-        1px solid
-        var(--border);
-}
+    mainContent.innerHTML = `
 
+        <section class="page">
 
-.detail-label {
-    margin-bottom: 12px;
+            <p class="eyebrow">
+                PLAY
+            </p>
 
-    font-size: 11px;
+            <h1 class="page-title">
+                Maka Challenge.
+            </h1>
 
-    font-weight: 700;
-
-    letter-spacing: 1.5px;
-
-    color: var(--text-secondary);
-}
+            <p class="page-description">
+                Five quick questions. Listen,
+                guess and discover.
+            </p>
 
 
-.word-meaning {
-    font-size: 24px;
+            <section class="content-section">
 
-    line-height: 1.5;
+                <div class="app-card">
 
-    color: var(--text-primary);
-}
+                    <h3>
+                        Ready?
+                    </h3>
 
+                    <p>
+                        The challenge will test your
+                        knowledge of Angolan slang through
+                        meaning, context and audio.
+                    </p>
 
-.word-secondary {
-    font-size: 18px;
+                    <button
+                        class="primary-button"
+                        id="start-game-button"
+                        type="button"
+                    >
+                        Start challenge
+                    </button>
 
-    line-height: 1.6;
+                </div>
 
-    color: var(--text-secondary);
+            </section>
+
+        </section>
+
+    `;
+
 }
 
 
 /* =========================================
-   EXAMPLE
+   UPDATES PAGE
 ========================================= */
 
-.word-example {
-    margin-top: 10px;
+function renderUpdates() {
 
-    padding: 25px;
+    mainContent.innerHTML = `
 
-    background: var(--surface-soft);
+        <section class="page">
 
-    border-radius: var(--radius-md);
-}
+            <p class="eyebrow">
+                WHAT'S NEW
+            </p>
 
+            <h1 class="page-title">
+                Updates.
+            </h1>
 
-.example-original {
-    margin-bottom: 12px;
-
-    font-size: 20px;
-
-    line-height: 1.6;
-
-    color: var(--text-primary);
-}
+            <p class="page-description">
+                New words, packs and improvements
+                added to the dictionary.
+            </p>
 
 
-.example-translation {
-    font-size: 15px;
+            <section class="content-section">
 
-    line-height: 1.6;
+                <div class="app-card">
 
-    color: var(--text-secondary);
+                    <h3>
+                        No updates yet
+                    </h3>
+
+                    <p>
+                        New content will appear here
+                        as the dictionary grows.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    `;
+
 }
 
 
 /* =========================================
-   ALTERNATIVES
+   ABOUT PAGE
 ========================================= */
 
-.word-alternatives {
-    display: flex;
+function renderAbout() {
 
-    flex-wrap: wrap;
+    mainContent.innerHTML = `
 
-    gap: 8px;
-}
+        <section class="page">
+
+            <p class="eyebrow">
+                ABOUT
+            </p>
+
+            <h1 class="page-title">
+                About the Dictionary.
+            </h1>
+
+            <p class="page-description">
+                A growing collection of Angolan slang,
+                expressions and everyday language.
+            </p>
 
 
-.word-alternatives span {
-    padding:
-        8px
-        13px;
+            <section class="content-section">
 
-    background: var(--surface-soft);
+                <div class="app-card">
 
-    border-radius: 999px;
+                    <h3>
+                        Discover Angola through language.
+                    </h3>
 
-    font-size: 14px;
+                    <p>
+                        Explore meanings, natural examples,
+                        authentic audio and expressions used
+                        in everyday Angolan life.
+                    </p>
 
-    color: var(--text-secondary);
+                </div>
+
+            </section>
+
+        </section>
+
+    `;
+
 }
 
 
 /* =========================================
-   SAVE BUTTON
+   SETTINGS PAGE
 ========================================= */
 
-.word-save-button {
-    margin-top: 30px;
+function renderSettings() {
 
-    width: 100%;
+    mainContent.innerHTML = `
 
-    justify-content: center;
+        <section class="page">
+
+            <p class="eyebrow">
+                APP
+            </p>
+
+            <h1 class="page-title">
+                Settings.
+            </h1>
+
+            <section class="content-section">
+
+                <div class="app-card">
+
+                    <h3>
+                        Settings
+                    </h3>
+
+                    <p>
+                        App preferences and account settings
+                        will appear here.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    `;
+
 }
 
 
 /* =========================================
-   BOTTOM NAVIGATION
+   PROFILE PAGE
 ========================================= */
 
-.bottom-navigation {
-    position: fixed;
+function renderProfile() {
 
-    left: 0;
-    right: 0;
-    bottom: 0;
+    mainContent.innerHTML = `
 
-    height: 78px;
+        <section class="page">
 
-    padding:
-        8px
-        14px;
+            <p class="eyebrow">
+                YOUR ACCOUNT
+            </p>
 
-    display: flex;
+            <h1 class="page-title">
+                My Profile.
+            </h1>
 
-    align-items: center;
+            <section class="content-section">
 
-    justify-content: space-around;
-
-    background:
-        rgba(255, 255, 255, 0.96);
-
-    backdrop-filter:
-        blur(18px);
-
-    border-top:
-        1px solid
-        var(--border);
-
-    z-index: 100;
-}
-
-
-.nav-item {
-    min-width: 68px;
-
-    height: 58px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 4px;
-
-    background: transparent;
-
-    color: var(--text-secondary);
-
-    border-radius: 16px;
-
-    font-size: 11px;
-}
-
-
-.nav-icon {
-    font-size: 20px;
-
-    line-height: 1;
-}
-
-
-.nav-item.active {
-    color: var(--red);
-
-    font-weight: 800;
-}
-
-
-.nav-search {
-    position: relative;
-}
-
-
-.nav-search .nav-icon {
-    width: 42px;
-    height: 42px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    margin-top: -12px;
-
-    background: var(--red);
-
-    color: white;
-
-    border:
-        3px solid
-        var(--background);
-
-    border-radius: 50%;
-
-    box-shadow: var(--shadow-sm);
-}
-
-
-/* =========================================
-   SIDE MENU
-========================================= */
-
-.menu-overlay {
-    position: fixed;
-
-    inset: 0;
-
-    background:
-        rgba(20, 18, 16, 0.4);
-
-    opacity: 0;
-
-    visibility: hidden;
-
-    transition:
-        opacity 0.25s ease;
-
-    z-index: 199;
-}
-
-
-.menu-overlay.open {
-    opacity: 1;
-
-    visibility: visible;
-}
-
-
-.side-menu {
-    position: fixed;
-
-    top: 0;
-    right: 0;
-    bottom: 0;
-
-    width:
-        min(340px, 88vw);
-
-    padding:
-        28px
-        20px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    background: var(--surface);
-
-    transform:
-        translateX(100%);
-
-    transition:
-        transform 0.3s ease;
-
-    box-shadow: var(--shadow-lg);
-
-    z-index: 200;
-
-    overflow-y: auto;
-}
-
-
-.side-menu.open {
-    transform:
-        translateX(0);
-}
-
-
-.menu-header {
-    padding-bottom: 30px;
-
-    display: flex;
-
-    align-items: flex-start;
-
-    justify-content: space-between;
-
-    border-bottom:
-        1px solid
-        var(--border);
-}
-
-
-.menu-small-title {
-    color: var(--red);
-
-    font-size: 10px;
-
-    font-weight: 900;
-
-    letter-spacing: 1.5px;
-}
-
-
-.menu-header h2 {
-    margin-top: 7px;
-
-    font-size: 36px;
-
-    letter-spacing: -2px;
-}
-
-
-.close-menu {
-    width: 42px;
-    height: 42px;
-
-    background: var(--surface-soft);
-
-    border-radius: 50%;
-
-    font-size: 28px;
-
-    color: var(--text-primary);
-}
-
-
-.menu-item {
-    width: 100%;
-
-    padding:
-        20px
-        10px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 15px;
-
-    background: transparent;
-
-    border-bottom:
-        1px solid
-        var(--border);
-
-    text-align: left;
-
-    color: var(--text-primary);
-
-    font-weight: 700;
-}
-
-
-.menu-item span {
-    width: 30px;
-
-    color: var(--red);
-
-    font-size: 20px;
-
-    text-align: center;
-}
-
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media (max-width: 700px) {
-
-    .header,
-    #main-content {
-        padding-left: 18px;
-        padding-right: 18px;
-    }
-
-
-    .header {
-        min-height: 80px;
-    }
-
-
-    .hero {
-        padding:
-            42px
-            25px
-            48px;
-
-        border-radius: 28px;
-    }
-
-
-    .hero h2 {
-        font-size: 48px;
-
-        letter-spacing: -2px;
-    }
-
-
-    .daily-grid {
-        grid-template-columns: 1fr;
-    }
-
-
-    .daily-card {
-        min-height: 180px;
-    }
-
-
-    .card-grid {
-        grid-template-columns: 1fr;
-    }
-
-
-    .section-heading {
-        align-items: flex-start;
-
-        flex-direction: column;
-    }
-}
-
-
-@media (min-width: 701px) {
-
-    .bottom-navigation {
-        left: 50%;
-
-        right: auto;
-
-        bottom: 20px;
-
-        transform:
-            translateX(-50%);
-
-        width: auto;
-
-        height: 70px;
-
-        padding:
-            7px
-            18px;
-
-        border:
-            1px solid
-            var(--border);
-
-        border-radius: 24px;
-
-        box-shadow: var(--shadow-md);
-    }
-           }
+                <div 
