@@ -1,5 +1,8 @@
+Html backup
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
 
@@ -13,11 +16,6 @@
         content="#A63D40"
     >
 
-    <meta
-        name="description"
-        content="Discover Angolan slang, expressions, meanings and natural examples."
-    >
-
     <title>Angolan Slang Dictionary</title>
 
     <link rel="stylesheet" href="style.css">
@@ -25,12 +23,13 @@
 
 <body>
 
+    <!-- =========================
+         APP
+    ========================== -->
+
     <div id="app">
 
-        <!-- =========================
-             DECORATIVE PATTERN
-        ========================== -->
-
+        <!-- Decorative Samakaka-inspired pattern -->
         <div class="pattern pattern-top"></div>
 
 
@@ -43,7 +42,7 @@
             <button
                 class="brand"
                 type="button"
-                data-route="home"
+                onclick="navigateTo('home')"
                 aria-label="Go to home"
             >
 
@@ -52,8 +51,15 @@
                 </div>
 
                 <div class="brand-text">
-                    <strong>Angolan Slang</strong>
-                    <span>Dictionary</span>
+
+                    <strong>
+                        Angolan Slang
+                    </strong>
+
+                    <span>
+                        Dictionary
+                    </span>
+
                 </div>
 
             </button>
@@ -72,65 +78,86 @@
 
 
         <!-- =========================
-             MAIN CONTENT
+             MAIN APP CONTENT
         ========================== -->
 
-        <main id="main-content"></main>
+        <main id="main-content">
+
+            <!-- JavaScript renders pages here -->
+
+        </main>
 
 
         <!-- =========================
              BOTTOM NAVIGATION
         ========================== -->
 
-        <nav
-            class="bottom-navigation"
-            aria-label="Main navigation"
-        >
+        <nav class="bottom-navigation">
 
             <button
                 class="nav-item active"
-                data-route="home"
+                data-page="home"
                 type="button"
             >
+
                 <span class="nav-icon">⌂</span>
-                <span class="nav-label">Home</span>
+
+                <span class="nav-label">
+                    Home
+                </span>
+
             </button>
 
 
             <button
                 class="nav-item"
-                data-route="dictionary"
+                data-page="dictionary"
                 type="button"
             >
+
                 <span class="nav-icon">▤</span>
-                <span class="nav-label">Dictionary</span>
+
+                <span class="nav-label">
+                    Dictionary
+                </span>
+
             </button>
 
 
             <button
                 class="nav-item nav-search"
-                data-route="search"
+                data-page="search"
                 type="button"
             >
+
                 <span class="nav-icon">⌕</span>
-                <span class="nav-label">Search</span>
+
+                <span class="nav-label">
+                    Search
+                </span>
+
             </button>
 
 
             <button
                 class="nav-item"
-                data-route="saved"
+                data-page="saved"
                 type="button"
             >
+
                 <span class="nav-icon">♡</span>
-                <span class="nav-label">Saved</span>
+
+                <span class="nav-label">
+                    Saved
+                </span>
+
             </button>
 
         </nav>
 
 
         <!-- =========================
-             SIDE MENU
+             MENU PANEL
         ========================== -->
 
         <div
@@ -142,12 +169,12 @@
         <aside
             class="side-menu"
             id="side-menu"
-            aria-hidden="true"
         >
 
             <div class="menu-header">
 
                 <div>
+
                     <p class="menu-small-title">
                         ANGOLAN SLANG
                     </p>
@@ -155,6 +182,7 @@
                     <h2>
                         Explore
                     </h2>
+
                 </div>
 
 
@@ -172,8 +200,7 @@
 
             <button
                 class="menu-item"
-                data-route="daily"
-                type="button"
+                onclick="navigateTo('daily')"
             >
                 <span>☀</span>
                 3 Words of the Day
@@ -182,28 +209,7 @@
 
             <button
                 class="menu-item"
-                data-route="packs"
-                type="button"
-            >
-                <span>▦</span>
-                Packs
-            </button>
-
-
-            <button
-                class="menu-item"
-                data-route="game"
-                type="button"
-            >
-                <span>✦</span>
-                Maka Challenge
-            </button>
-
-
-            <button
-                class="menu-item"
-                data-route="updates"
-                type="button"
+                onclick="navigateTo('updates')"
             >
                 <span>✦</span>
                 Updates
@@ -212,8 +218,7 @@
 
             <button
                 class="menu-item"
-                data-route="about"
-                type="button"
+                onclick="navigateTo('about')"
             >
                 <span>i</span>
                 About the Dictionary
@@ -222,21 +227,10 @@
 
             <button
                 class="menu-item"
-                data-route="settings"
-                type="button"
+                onclick="navigateTo('settings')"
             >
                 <span>⚙</span>
                 Settings
-            </button>
-
-
-            <button
-                class="menu-item"
-                data-route="profile"
-                type="button"
-            >
-                <span>●</span>
-                My Profile
             </button>
 
         </aside>
@@ -247,4 +241,6 @@
     <script src="script.js"></script>
 
 </body>
+
 </html>
+
