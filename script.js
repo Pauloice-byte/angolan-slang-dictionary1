@@ -1,955 +1,1451 @@
 /* =========================================
    ANGOLAN SLANG DICTIONARY
-   MAIN APPLICATION
+   SAMAKAKA-INSPIRED DESIGN SYSTEM
 ========================================= */
 
 
 /* =========================================
-   APP STATE
+   DESIGN VARIABLES
 ========================================= */
 
-const appState = {
+:root {
 
-    currentPage: "home",
+    --red: #A63D40;
+    --red-dark: #7D292C;
+    --red-light: #F4DEDC;
 
-    previousPage: "home",
+    --gold: #D89B2B;
+    --gold-light: #F7E8C5;
 
-    savedWords: JSON.parse(
-        localStorage.getItem(
-            "angolanSlangSavedWords"
-        )
-    ) || [],
+    --green: #386A4B;
+    --green-light: #DCE9DF;
 
-};
+    --blue: #263D5B;
+    --blue-light: #DDE4ED;
+
+    --background: #F6F0E5;
+    --surface: #FFFFFF;
+    --surface-soft: #EEE6D8;
+
+    --text-primary: #211D1A;
+    --text-secondary: #706860;
+    --text-light: #A69D93;
+
+    --border: #DED4C6;
+
+    --primary: var(--red);
+    --primary-dark: var(--red-dark);
+
+    --shadow-sm:
+        0 3px 10px
+        rgba(33, 29, 26, 0.06);
+
+    --shadow-md:
+        0 10px 30px
+        rgba(33, 29, 26, 0.10);
+
+    --shadow-lg:
+        0 25px 60px
+        rgba(33, 29, 26, 0.15);
+
+    --radius-sm: 12px;
+    --radius-md: 18px;
+    --radius-lg: 26px;
+    --radius-xl: 36px;
+
+    --max-width: 1100px;
+}
 
 
 /* =========================================
-   TEMPORARY DEMO DATA
-
-   IMPORTANT:
-   This is NOT the permanent dictionary.
-
-   These entries exist only so that we can
-   build and test the application interface.
-
-   Later:
-
-   Supabase
-       ↓
-   loadWords()
-       ↓
-   App
+   RESET
 ========================================= */
 
-const demoWords = [
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    {
-        id: 1,
-        word: "Kota",
-        meaning: "Temporary demonstration meaning.",
-        example: "Temporary example.",
-        alternatives: []
-    },
 
-    {
-        id: 2,
-        word: "Bazar",
-        meaning: "Temporary demonstration meaning.",
-        example: "Temporary example.",
-        alternatives: []
-    },
+html {
+    min-height: 100%;
+    scroll-behavior: smooth;
+}
 
-    {
-        id: 3,
-        word: "Mambo",
-        meaning: "Temporary demonstration meaning.",
-        example: "Temporary example.",
-        alternatives: []
-    }
 
-];
+body {
+    min-height: 100vh;
+
+    background: var(--background);
+
+    color: var(--text-primary);
+
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    -webkit-font-smoothing: antialiased;
+}
+
+
+button,
+input {
+    font: inherit;
+}
+
+
+button {
+    border: none;
+    cursor: pointer;
+}
+
+
+button:focus-visible,
+input:focus-visible {
+    outline: 3px solid
+        rgba(166, 61, 64, 0.35);
+
+    outline-offset: 3px;
+}
+
+
+button:disabled {
+    cursor: not-allowed;
+}
+
+
+/* =========================================
+   APP
+========================================= */
+
+#app {
+    min-height: 100vh;
+
+    position: relative;
+
+    overflow-x: hidden;
+
+    padding-bottom: 100px;
+}
+
+
+/* =========================================
+   PATTERN
+========================================= */
+
+.pattern {
+    position: absolute;
+
+    pointer-events: none;
+
+    opacity: 0.9;
+
+    z-index: 0;
+}
+
+
+.pattern-top {
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 110px;
+
+    background-image:
+        url("assets/samakaka-pattern.png");
+
+    background-size: cover;
+
+    background-position: center;
+
+    background-repeat: no-repeat;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.header {
+    width: 100%;
+
+    max-width: var(--max-width);
+
+    min-height: 90px;
+
+    margin: 0 auto;
+
+    padding: 18px 24px;
+
+    position: relative;
+
+    z-index: 10;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+.brand {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    background: transparent;
+
+    text-align: left;
+}
+
+
+.brand-symbol {
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: var(--red);
+
+    color: white;
+
+    border: 3px solid var(--gold);
+
+    border-radius: 16px;
+
+    font-size: 22px;
+
+    font-weight: 900;
+
+    box-shadow: var(--shadow-sm);
+}
+
+
+.brand-text {
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.brand-text strong {
+    font-size: 16px;
+
+    font-weight: 800;
+
+    line-height: 1.15;
+}
+
+
+.brand-text span {
+    margin-top: 2px;
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+}
+
+
+.header-button {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: var(--surface);
+
+    color: var(--blue);
+
+    border: 1px solid var(--border);
+
+    border-radius: 50%;
+
+    font-size: 21px;
+
+    box-shadow: var(--shadow-sm);
+}
+
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+#main-content {
+    width: 100%;
+
+    max-width: var(--max-width);
+
+    margin: 0 auto;
+
+    padding: 20px 24px;
+
+    position: relative;
+
+    z-index: 2;
+}
+
+
+/* =========================================
+   PAGE
+========================================= */
+
+.page {
+    width: 100%;
+}
+
+
+.page-title {
+    margin-bottom: 8px;
+
+    font-size: clamp(38px, 6vw, 60px);
+
+    line-height: 1;
+
+    letter-spacing: -2px;
+}
+
+
+.page-description {
+    max-width: 620px;
+
+    color: var(--text-secondary);
+
+    font-size: 16px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================
+   HOME
+========================================= */
+
+.home-page {
+    padding-top: 20px;
+}
+
+
+.hero {
+    position: relative;
+
+    overflow: hidden;
+
+    padding:
+        55px
+        45px
+        55px;
+
+    background: var(--surface);
+
+    border:
+        2px solid
+        var(--gold);
+
+    border-radius: var(--radius-xl);
+
+    box-shadow: var(--shadow-md);
+}
+
+
+.hero::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    right: 0;
+
+    width: 150px;
+    height: 150px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--red) 25%,
+            var(--gold) 25%,
+            var(--gold) 50%,
+            var(--green) 50%,
+            var(--green) 75%,
+            var(--blue) 75%
+        );
+
+    opacity: 0.16;
+
+    clip-path:
+        polygon(
+            0 0,
+            100% 0,
+            100% 100%
+        );
+}
+
+
+.hero::after {
+    content: "";
+
+    position: absolute;
+
+    left: -40px;
+    bottom: -60px;
+
+    width: 190px;
+    height: 190px;
+
+    border:
+        24px solid
+        var(--gold-light);
+
+    border-radius: 50%;
+
+    opacity: 0.8;
+}
+
+
+.hero > * {
+    position: relative;
+
+    z-index: 2;
+}
+
+
+.eyebrow {
+    color: var(--red);
+
+    font-size: 11px;
+
+    font-weight: 900;
+
+    letter-spacing: 1.7px;
+
+    margin-bottom: 16px;
+}
+
+
+.hero h2 {
+    max-width: 680px;
+
+    font-size:
+        clamp(48px, 7vw, 78px);
+
+    line-height: 0.96;
+
+    letter-spacing: -3px;
+}
+
+
+.hero h2 span {
+    color: var(--red);
+}
+
+
+.hero-description {
+    max-width: 530px;
+
+    margin-top: 25px;
+
+    color: var(--text-secondary);
+
+    font-size: 16px;
+
+    line-height: 1.7;
+}
+
+
+.primary-button {
+    margin-top: 30px;
+
+    min-height: 52px;
+
+    padding:
+        14px
+        22px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    background: var(--red);
+
+    color: white;
+
+    border-radius: 999px;
+
+    font-weight: 800;
+
+    box-shadow:
+        0 8px 20px
+        rgba(166, 61, 64, 0.25);
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.primary-button:hover {
+    background: var(--red-dark);
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================
+   SEARCH
+========================================= */
+
+.home-search {
+    margin:
+        25px
+        0
+        65px;
+}
+
+
+.search-box {
+    min-height: 68px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding:
+        8px
+        20px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-lg);
+
+    box-shadow: var(--shadow-sm);
+}
+
+
+.search-box span {
+    color: var(--red);
+
+    font-size: 26px;
+}
+
+
+.search-box input {
+    width: 100%;
+
+    padding: 14px 0;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: var(--text-primary);
+}
+
+
+/* =========================================
+   SECTIONS
+========================================= */
+
+.content-section {
+    padding-bottom: 40px;
+}
+
+
+.section-heading {
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 24px;
+}
+
+
+.section-heading h2 {
+    font-size: 30px;
+
+    letter-spacing: -1px;
+}
+
+
+.text-button {
+    background: transparent;
+
+    color: var(--red);
+
+    font-weight: 800;
+}
 
 
 /* =========================================
    DAILY WORDS
-
-   Temporary only.
 ========================================= */
 
-const dailyWords = [
+.daily-grid {
+    display: grid;
 
-    demoWords[0],
+    grid-template-columns:
+        repeat(3, 1fr);
 
-    demoWords[1],
-
-    demoWords[2]
-
-];
+    gap: 16px;
+}
 
 
-/* =========================================
-   NAVIGATION
-========================================= */
+.daily-card {
+    min-height: 230px;
 
-function navigateTo(page) {
+    position: relative;
 
-    appState.previousPage =
-        appState.currentPage;
+    overflow: hidden;
 
-    appState.currentPage = page;
+    padding: 24px;
 
-    closeMenu();
+    display: flex;
 
-    updateNavigation();
+    flex-direction: column;
 
-    renderPage();
+    background: var(--surface);
 
-    window.scrollTo({
+    border:
+        2px solid
+        var(--gold);
 
-        top: 0,
+    border-radius: var(--radius-lg);
 
-        behavior: "smooth"
+    box-shadow: var(--shadow-sm);
 
-    });
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
 
+
+.daily-card:nth-child(2) {
+    background: var(--blue);
+
+    color: white;
+
+    border:
+        2px solid
+        var(--gold);
+}
+
+
+.daily-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 8px 24px
+        rgba(216, 155, 43, 0.18);
+}
+
+
+.daily-number {
+    color: var(--red);
+
+    font-size: 11px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+}
+
+
+.daily-card:nth-child(2) .daily-number {
+    color: var(--gold);
+}
+
+
+.daily-card:nth-child(3) .daily-number {
+    color: var(--green);
+}
+
+
+.daily-card h3 {
+    margin-top: auto;
+
+    font-size: 32px;
+
+    letter-spacing: -1px;
+}
+
+
+.daily-card p {
+    margin-top: 8px;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+}
+
+
+.daily-card:nth-child(2) p {
+    color:
+        rgba(255, 255, 255, 0.75);
+}
+
+
+.daily-card button {
+    margin-top: 20px;
+
+    background: transparent;
+
+    color: var(--red);
+
+    text-align: left;
+
+    font-weight: 800;
+}
+
+
+.daily-card:nth-child(2) button {
+    color: var(--gold);
 }
 
 
 /* =========================================
-   UPDATE NAVIGATION
+   DAILY SLIDER
 ========================================= */
 
-function updateNavigation() {
+.daily-slider {
+    width: 100%;
 
-    const navItems =
-        document.querySelectorAll(
-            ".nav-item"
+    overflow-x: auto;
+
+    overflow-y: hidden;
+
+    scroll-snap-type: x mandatory;
+
+    scrollbar-width: none;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+
+.daily-slider::-webkit-scrollbar {
+    display: none;
+}
+
+
+.daily-slider-track {
+    display: flex;
+
+    gap: 16px;
+}
+
+
+.daily-slide {
+    min-width: 100%;
+
+    scroll-snap-align: center;
+}
+
+
+.daily-slide .daily-card {
+    width: 100%;
+
+    min-height: 260px;
+}
+
+
+/* =========================================
+   SLIDER DOTS
+========================================= */
+
+.slider-dots {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-top: 18px;
+}
+
+
+.slider-dot {
+    width: 8px;
+    height: 8px;
+
+    padding: 0;
+
+    background: var(--border);
+
+    border-radius: 50%;
+
+    transition:
+        width 0.25s ease,
+        background 0.25s ease;
+}
+
+
+.slider-dot.active {
+    width: 26px;
+
+    background: var(--red);
+
+    border-radius: 999px;
+}
+
+
+/* =========================================
+   GENERIC CARDS
+========================================= */
+
+.card-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 16px;
+}
+
+
+.app-card {
+    padding: 24px;
+
+    background: var(--surface);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: var(--radius-lg);
+
+    box-shadow: var(--shadow-sm);
+}
+
+
+.app-card h3 {
+    font-size: 22px;
+
+    letter-spacing: -0.5px;
+}
+
+
+.app-card p {
+    margin-top: 8px;
+
+    color: var(--text-secondary);
+
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   WORD DETAIL
+========================================= */
+
+.word-detail-page {
+    padding-bottom: 120px;
+}
+
+
+.word-detail {
+    width: 100%;
+
+    max-width: 760px;
+
+    margin: 35px auto 0;
+}
+
+
+.word-detail-header {
+    padding: 35px 0 40px;
+}
+
+
+.word-title-row {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+.word-title-row h1 {
+    margin:
+        10px
+        0
+        12px;
+
+    font-size:
+        clamp(
+            58px,
+            12vw,
+            100px
         );
 
+    line-height: 0.95;
 
-    navItems.forEach((item) => {
+    letter-spacing: -4px;
 
-        item.classList.remove("active");
+    color: var(--text-primary);
+}
 
 
-        if (
-            item.dataset.page ===
-            appState.currentPage
-        ) {
+.word-audio-button {
+    width: 52px;
+    height: 52px;
 
-            item.classList.add("active");
+    flex-shrink: 0;
 
-        }
+    border:
+        1px solid
+        var(--border);
 
-    });
+    border-radius: 50%;
 
+    background: var(--surface);
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.word-audio-button:not(:disabled):hover {
+    transform: scale(1.05);
+}
+
+
+.word-audio-button:disabled {
+    opacity: 0.35;
+
+    cursor: not-allowed;
+}
+
+
+.word-meta {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+}
+
+
+.word-meta span {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding:
+        7px
+        12px;
+
+    border-radius: 999px;
+
+    background: var(--surface-soft);
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
 }
 
 
 /* =========================================
-   PAGE ROUTER
+   DETAIL SECTIONS
 ========================================= */
 
-function renderPage() {
+.word-detail-section {
+    padding:
+        28px
+        0;
 
-    const mainContent =
-        document.getElementById(
-            "main-content"
-        );
-
-
-    switch (
-        appState.currentPage
-    ) {
-
-        case "home":
-
-            mainContent.innerHTML =
-                renderHome();
-
-            break;
+    border-top:
+        1px solid
+        var(--border);
+}
 
 
-        case "dictionary":
+.detail-label {
+    margin-bottom: 12px;
 
-            mainContent.innerHTML =
-                renderComingSoon(
-                    "Dictionary",
-                    "The complete dictionary experience is being built."
-                );
+    font-size: 11px;
 
-            break;
+    font-weight: 700;
 
+    letter-spacing: 1.5px;
 
-        case "search":
-
-            mainContent.innerHTML =
-                renderComingSoon(
-                    "Search",
-                    "Search will allow users to find words, meanings and expressions."
-                );
-
-            break;
+    color: var(--text-secondary);
+}
 
 
-        case "saved":
+.word-meaning {
+    font-size: 24px;
 
-            mainContent.innerHTML =
-                renderComingSoon(
-                    "Saved Words",
-                    "Your favourite words will appear here."
-                );
+    line-height: 1.5;
 
-            break;
+    color: var(--text-primary);
+}
 
 
-        case "daily":
+.word-secondary {
+    font-size: 18px;
 
-            mainContent.innerHTML =
-                renderDailyPage();
+    line-height: 1.6;
 
-            break;
-
-
-        case "updates":
-
-            mainContent.innerHTML =
-                renderUpdates();
-
-            break;
-
-
-        case "about":
-
-            mainContent.innerHTML =
-                renderAbout();
-
-            break;
-
-
-        case "settings":
-
-            mainContent.innerHTML =
-                renderComingSoon(
-                    "Settings",
-                    "Personalisation and application settings will appear here."
-                );
-
-            break;
-
-
-        default:
-
-            mainContent.innerHTML =
-                renderHome();
-
-    }
-
+    color: var(--text-secondary);
 }
 
 
 /* =========================================
-   HOME PAGE
+   EXAMPLE
 ========================================= */
 
-function renderHome() {
+.word-example {
+    margin-top: 10px;
 
-    return `
+    padding: 25px;
 
-        <section class="home-page">
+    background: var(--surface-soft);
 
-            <section class="hero">
+    border-radius: var(--radius-md);
+}
 
-                <p class="eyebrow">
-                    ANGOLA IN WORDS
-                </p>
 
+.example-original {
+    margin-bottom: 12px;
 
-                <h2>
+    font-size: 20px;
 
-                    The words.
+    line-height: 1.6;
 
-                    <br>
+    color: var(--text-primary);
+}
 
-                    The culture.
 
-                    <br>
+.example-translation {
+    font-size: 15px;
 
-                    <span>
-                        The meaning.
-                    </span>
+    line-height: 1.6;
 
-                </h2>
-
-
-                <p class="hero-description">
-
-                    Discover the expressions,
-                    slang and everyday language
-                    that bring Angolan culture
-                    to life.
-
-                </p>
-
-
-                <button
-                    class="primary-button"
-                    type="button"
-                    onclick="navigateTo('dictionary')"
-                >
-
-                    Explore Dictionary
-
-                    <span>
-                        →
-                    </span>
-
-                </button>
-
-            </section>
-
-
-            <section class="home-search">
-
-                <div
-                    class="search-box"
-                    onclick="navigateTo('search')"
-                >
-
-                    <span>
-                        ⌕
-                    </span>
-
-
-                    <input
-                        type="text"
-                        placeholder="Search for a word..."
-                        readonly
-                        aria-label="Search dictionary"
-                    >
-
-                </div>
-
-            </section>
-
-
-            <section class="daily-section">
-
-                <div class="section-heading">
-
-                    <div>
-
-                        <p class="eyebrow">
-                            DISCOVER TODAY
-                        </p>
-
-
-                        <h2>
-                            3 Words of the Day
-                        </h2>
-
-                    </div>
-
-
-                    <button
-                        class="text-button"
-                        type="button"
-                        onclick="navigateTo('daily')"
-                    >
-                        View all →
-                    </button>
-
-                </div>
-
-
-                <div class="daily-slider">
-
-    <div class="daily-slider-track">
-
-        ${dailyWords.map(
-            (item, index) => `
-
-            <article class="daily-slide">
-
-                <div class="daily-card">
-
-                    <span class="daily-number">
-
-                        ${String(index + 1).padStart(2, "0")} / 03
-
-                    </span>
-
-                    <h3>
-
-                        ${item.word}
-
-                    </h3>
-
-                    <p>
-
-                        Discover today's word.
-
-                    </p>
-
-                    <button
-                        type="button"
-                        onclick="openDemoWord(${item.id})"
-                    >
-
-                        Discover →
-
-                    </button>
-
-                </div>
-
-            </article>
-
-        `
-        ).join("")}
-
-    </div>
-
-</div>
-
-
-<div class="slider-dots">
-
-    ${dailyWords.map(
-        (_, index) => `
-
-        <button
-            class="slider-dot ${index === 0 ? "active" : ""}"
-            type="button"
-            aria-label="Go to word ${index + 1}"
-        ></button>
-
-    `
-    ).join("")}
-
-</div>
-
-            </section>
-
-        </section>
-
-    `;
-
+    color: var(--text-secondary);
 }
 
 
 /* =========================================
-   DAILY PAGE
+   ALTERNATIVES
 ========================================= */
 
-function renderDailyPage() {
+.word-alternatives {
+    display: flex;
 
-    return `
+    flex-wrap: wrap;
 
-        <section class="home-page">
-
-            <p class="eyebrow">
-                TODAY'S DISCOVERY
-            </p>
+    gap: 8px;
+}
 
 
-            <h2
-                style="
-                    font-size: clamp(42px, 7vw, 64px);
-                    letter-spacing: -2px;
-                "
-            >
-                3 Words of the Day
-            </h2>
+.word-alternatives span {
+    padding:
+        8px
+        13px;
 
+    background: var(--surface-soft);
 
-            <div
-                class="daily-grid"
-                style="
-                    margin-top: 30px;
-                "
-            >
+    border-radius: 999px;
 
-                ${dailyWords.map(
-                    (item, index) => `
+    font-size: 14px;
 
-                    <article class="daily-card">
-
-                        <span class="daily-number">
-
-                            0${index + 1}
-
-                        </span>
-
-
-                        <h3>
-
-                            ${item.word}
-
-                        </h3>
-
-
-                        <p>
-
-                            Discover today's word.
-
-                        </p>
-
-
-                        <button
-                            type="button"
-                            onclick="openDemoWord(${item.id})"
-                        >
-
-                            Discover →
-
-                        </button>
-
-                    </article>
-
-                `
-                ).join("")}
-
-            </div>
-
-        </section>
-
-    `;
-
+    color: var(--text-secondary);
 }
 
 
 /* =========================================
-   TEMPORARY WORD PREVIEW
+   SAVE BUTTON
 ========================================= */
 
-function openDemoWord(id) {
+.word-save-button {
+    margin-top: 30px;
 
-    const word =
-        demoWords.find(
-            (item) => item.id === id
-        );
+    width: 100%;
 
-
-    if (!word) {
-
-        return;
-
-    }
-
-
-    appState.previousPage =
-        appState.currentPage;
-
-
-    const mainContent =
-        document.getElementById(
-            "main-content"
-        );
-
-
-    mainContent.innerHTML = `
-
-        <section class="home-page">
-
-            <button
-                class="text-button"
-                type="button"
-                onclick="navigateTo(
-                    '${appState.previousPage}'
-                )"
-            >
-
-                ← Back
-
-            </button>
-
-
-            <div
-                class="hero"
-                style="
-                    margin-top: 25px;
-                "
-            >
-
-                <p class="eyebrow">
-                    WORD PREVIEW
-                </p>
-
-
-                <h2>
-
-                    ${word.word}
-
-                </h2>
-
-
-                <p
-                    class="hero-description"
-                >
-
-                    ${word.meaning}
-
-                </p>
-
-
-                <div
-                    style="
-                        margin-top: 28px;
-                        padding: 22px;
-                        background: var(--surface-soft);
-                        border-radius: var(--radius-md);
-                        color: var(--text-secondary);
-                        line-height: 1.7;
-                    "
-                >
-
-                    “${word.example}”
-
-                </div>
-
-            </div>
-
-        </section>
-
-    `;
-
-
-    window.scrollTo({
-
-        top: 0,
-
-        behavior: "smooth"
-
-    });
-
+    justify-content: center;
 }
-
-
-/* =========================================
-   UPDATES PAGE
-========================================= */
-
-function renderUpdates() {
-
-    return `
-
-        <section class="home-page">
-
-            <p class="eyebrow">
-                WHAT'S NEW
-            </p>
-
-
-            <h2
-                style="
-                    font-size: clamp(42px, 7vw, 64px);
-                    letter-spacing: -2px;
-                "
-            >
-                Updates
-            </h2>
-
-
-            <div
-                class="hero"
-                style="
-                    margin-top: 30px;
-                "
-            >
-
-                <p class="eyebrow">
-
-                    COMING SOON
-
-                </p>
-
-
-                <h3
-                    style="
-                        font-size: 28px;
-                    "
-                >
-
-                    New update
-
-                </h3>
-
-
-                <p class="hero-description">
-
-                    A new dictionary update
-                    will be announced here.
-
-                    In the future, updates such as
-                    “New update coming on September 1st, 2026”
-                    can be created directly from
-                    the admin dashboard.
-
-                </p>
-
-            </div>
-
-        </section>
-
-    `;
-
-}
-
-
-/* =========================================
-   ABOUT PAGE
-========================================= */
-
-function renderAbout() {
-
-    return `
-
-        <section class="home-page">
-
-            <p class="eyebrow">
-                THE PROJECT
-            </p>
-
-
-            <h2
-                style="
-                    font-size: clamp(42px, 7vw, 64px);
-                    letter-spacing: -2px;
-                "
-            >
-                About
-            </h2>
-
-
-            <div
-                class="hero"
-                style="
-                    margin-top: 30px;
-                "
-            >
-
-                <h3
-                    style="
-                        font-size: 30px;
-                    "
-                >
-
-                    Angolan Slang Dictionary
-
-                </h3>
-
-
-                <p class="hero-description">
-
-                    A digital dictionary designed
-                    to preserve, explore and share
-                    Angolan slang, expressions
-                    and everyday language.
-
-                </p>
-
-            </div>
-
-        </section>
-
-    `;
-
-}
-
-
-/* =========================================
-   GENERIC PLACEHOLDER PAGE
-========================================= */
-
-function renderComingSoon(
-    title,
-    description
-) {
-
-    return `
-
-        <section class="home-page">
-
-            <div class="hero">
-
-                <p class="eyebrow">
-                    UNDER DEVELOPMENT
-                </p>
-
-
-                <h2>
-
-                    ${title}
-
-                </h2>
-
-
-                <p class="hero-description">
-
-                    ${description}
-
-                </p>
-
-
-                <div
-                    style="
-                        margin-top: 30px;
-                        padding: 20px;
-                        background: var(--gold-light);
-                        border-radius: var(--radius-md);
-                        color: var(--text-primary);
-                    "
-                >
-
-                    We are building this section
-                    step by step.
-
-                </div>
-
-            </div>
-
-        </section>
-
-    `;
-
-}
-
-
-/* =========================================
-   MENU
-========================================= */
-
-const menuButton =
-    document.getElementById(
-        "menu-button"
-    );
-
-
-const closeMenuButton =
-    document.getElementById(
-        "close-menu"
-    );
-
-
-const sideMenu =
-    document.getElementById(
-        "side-menu"
-    );
-
-
-const menuOverlay =
-    document.getElementById(
-        "menu-overlay"
-    );
-
-
-function openMenu() {
-
-    sideMenu.classList.add("open");
-
-    menuOverlay.classList.add("open");
-
-}
-
-
-function closeMenu() {
-
-    sideMenu.classList.remove("open");
-
-    menuOverlay.classList.remove("open");
-
-}
-
-
-menuButton.addEventListener(
-    "click",
-    openMenu
-);
-
-
-closeMenuButton.addEventListener(
-    "click",
-    closeMenu
-);
-
-
-menuOverlay.addEventListener(
-    "click",
-    closeMenu
-);
 
 
 /* =========================================
    BOTTOM NAVIGATION
 ========================================= */
 
-document
-    .querySelectorAll(".nav-item")
-    .forEach((item) => {
+.bottom-navigation {
+    position: fixed;
 
-        item.addEventListener(
-            "click",
-            () => {
+    left: 0;
+    right: 0;
+    bottom: 0;
 
-                navigateTo(
-                    item.dataset.page
-                );
+    height: 78px;
 
-            }
-        );
+    padding:
+        8px
+        14px;
 
-    });
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-around;
+
+    background:
+        rgba(255, 255, 255, 0.96);
+
+    backdrop-filter:
+        blur(18px);
+
+    border-top:
+        1px solid
+        var(--border);
+
+    z-index: 100;
+}
+
+
+.nav-item {
+    min-width: 68px;
+
+    height: 58px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 4px;
+
+    background: transparent;
+
+    color: var(--text-secondary);
+
+    border-radius: 16px;
+
+    font-size: 11px;
+}
+
+
+.nav-icon {
+    font-size: 20px;
+
+    line-height: 1;
+}
+
+
+.nav-item.active {
+    color: var(--red);
+
+    font-weight: 800;
+}
+
+
+.nav-search {
+    position: relative;
+}
+
+
+.nav-search .nav-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-top: -12px;
+
+    background: var(--red);
+
+    color: white;
+
+    border:
+        3px solid
+        var(--background);
+
+    border-radius: 50%;
+
+    box-shadow: var(--shadow-sm);
+}
 
 
 /* =========================================
-   INITIALIZE APPLICATION
+   SIDE MENU
 ========================================= */
-document.addEventListener(
-    "scroll",
-    () => {
 
-        const slider =
-            document.querySelector(
-                ".daily-slider"
-            );
+.menu-overlay {
+    position: fixed;
 
+    inset: 0;
 
-        if (!slider) {
+    background:
+        rgba(20, 18, 16, 0.4);
 
-            return;
+    opacity: 0;
 
-        }
+    visibility: hidden;
 
+    transition:
+        opacity 0.25s ease;
 
-        const slideWidth =
-            slider.clientWidth;
-
-
-        const currentIndex =
-            Math.round(
-                slider.scrollLeft /
-                slideWidth
-            );
+    z-index: 199;
+}
 
 
-        const dots =
-            document.querySelectorAll(
-                ".slider-dot"
-            );
+.menu-overlay.open {
+    opacity: 1;
+
+    visibility: visible;
+}
 
 
-        dots.forEach(
-            (dot, index) => {
+.side-menu {
+    position: fixed;
 
-                dot.classList.toggle(
-                    "active",
-                    index === currentIndex
-                );
+    top: 0;
+    right: 0;
+    bottom: 0;
 
-            }
-        );
+    width:
+        min(340px, 88vw);
 
-    },
-    true
-);
-renderPage();
+    padding:
+        28px
+        20px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    background: var(--surface);
+
+    transform:
+        translateX(100%);
+
+    transition:
+        transform 0.3s ease;
+
+    box-shadow: var(--shadow-lg);
+
+    z-index: 200;
+
+    overflow-y: auto;
+}
+
+
+.side-menu.open {
+    transform:
+        translateX(0);
+}
+
+
+.menu-header {
+    padding-bottom: 30px;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    border-bottom:
+        1px solid
+        var(--border);
+}
+
+
+.menu-small-title {
+    color: var(--red);
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: 1.5px;
+}
+
+
+.menu-header h2 {
+    margin-top: 7px;
+
+    font-size: 36px;
+
+    letter-spacing: -2px;
+}
+
+
+.close-menu {
+    width: 42px;
+    height: 42px;
+
+    background: var(--surface-soft);
+
+    border-radius: 50%;
+
+    font-size: 28px;
+
+    color: var(--text-primary);
+}
+
+
+.menu-item {
+    width: 100%;
+
+    padding:
+        20px
+        10px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    background: transparent;
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+    text-align: left;
+
+    color: var(--text-primary);
+
+    font-weight: 700;
+}
+
+
+.menu-item span {
+    width: 30px;
+
+    color: var(--red);
+
+    font-size: 20px;
+
+    text-align: center;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 700px) {
+
+    .header,
+    #main-content {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+
+    .header {
+        min-height: 80px;
+    }
+
+
+    .hero {
+        padding:
+            42px
+            25px
+            48px;
+
+        border-radius: 28px;
+    }
+
+
+    .hero h2 {
+        font-size: 48px;
+
+        letter-spacing: -2px;
+    }
+
+
+    .daily-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .daily-card {
+        min-height: 180px;
+    }
+
+
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .section-heading {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+}
+
+
+@media (min-width: 701px) {
+
+    .bottom-navigation {
+        left: 50%;
+
+        right: auto;
+
+        bottom: 20px;
+
+        transform:
+            translateX(-50%);
+
+        width: auto;
+
+        height: 70px;
+
+        padding:
+            7px
+            18px;
+
+        border:
+            1px solid
+            var(--border);
+
+        border-radius: 24px;
+
+        box-shadow: var(--shadow-md);
+    }
+           }
